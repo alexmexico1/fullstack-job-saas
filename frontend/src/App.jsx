@@ -9,7 +9,6 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
-// Fixed path matching your actual directory structure
 import ProtectedRoute from "./routes/ProtectedRoute";
 
 export default function App() {
