@@ -9,12 +9,12 @@ import Profile from "./pages/Profile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
-import ProtectedRoute from "./components/ProtectedRoute";
+// Fixed path matching your actual directory structure
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 export default function App() {
   return (
     <Routes>
-
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
@@ -62,7 +62,6 @@ export default function App() {
           </ProtectedRoute>
         }
       />
-
     </Routes>
   );
 }
