@@ -8,7 +8,19 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+// FIX: Explicitly whitelist your exact Vercel frontend URL configuration
+app.use(
+  cors({
+    origin: "https://fullstack-job-saas-git-main-alexmexico1s-projects.vercel.app",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+  })
+);
+
+// Extra Safety: Explicitly handle browser preflight OPTIONS requests before hitting routes
+app.options("*", cors());
+
 app.use(express.json());
 
 // Routes
