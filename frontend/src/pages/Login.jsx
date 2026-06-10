@@ -1,6 +1,7 @@
 import { useState } from "react";
 import API from "../services/api";
-import { useAuth } from "../context/AuthContext";
+// FIX: Point this directly to the file where we actually created useAuth
+import { useAuth } from "../services/authService.jsx"; 
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
@@ -17,10 +18,8 @@ export default function Login() {
     try {
       const res = await API.post("/auth/login", form);
       
-      // If your backend auth response returns an object with token and user nested, 
-      // your login hook might expect: login(res.data.token, res.data.user);
-      // Otherwise, passing res.data works if your hook reads the whole payload object:
-      login(res.data);
+      // Use the email and password strings directly into your unified context login handler
+      await login(form.email, form.password);
       
       navigate("/");
     } catch (err) {
