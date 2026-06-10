@@ -1,33 +1,31 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 
-// Enable CORS for both your local computer and your live Vercel website
+// Middleware
+app.use(express.json());
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://fullstack-job-saas.vercel.app'],
+  origin: ['https://fullstack-job-saas.vercel.app', 'http://localhost:5173'],
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Middleware to parse incoming JSON data
-app.use(express.json());
-
-// Import your existing authentication routes
-const authRoutes = require('./routes/auth'); 
+// Routes
+const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
-// Base test route to verify the server is running
+// Test Route
 app.get('/api', (req, res) => {
   res.json({ message: "Backend server is running successfully!" });
 });
 
-// Database Connection
+// Database and Server Start
 const PORT = process.env.PORT || 5000;
-mongoose.connect(process.env.MONGO_URI || process.env.MONGO_URL)
+mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     app.listen(PORT, () => {
       console.log(`Server is running on port ${PORT}`);
@@ -35,4 +33,5 @@ mongoose.connect(process.env.MONGO_URI || process.env.MONGO_URL)
   })
   .catch((err) => {
     console.error("Database connection error: ", err);
+    process.exit(1); // Exit if DB fails
   });
