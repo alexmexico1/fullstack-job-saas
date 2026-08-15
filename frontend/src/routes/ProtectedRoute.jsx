@@ -1,8 +1,14 @@
 import { Navigate } from "react-router-dom";
-import { isLoggedIn } from "../services/auth";
+import { useAuth } from "../services/authService.jsx";
 
 export default function ProtectedRoute({ children }) {
-  if (!isLoggedIn()) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 

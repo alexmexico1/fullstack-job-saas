@@ -1,4 +1,4 @@
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../services/authService.jsx";
 
 export default function Profile() {
   const { logout } = useAuth();

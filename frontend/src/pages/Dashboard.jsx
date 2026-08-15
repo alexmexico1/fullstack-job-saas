@@ -4,7 +4,7 @@ import API from "../services/api";
 import Sidebar from "../layout/Sidebar";
 import Navbar from "../layout/Navbar";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../services/authService.jsx";
 
 export default function Dashboard() {
   const { user, logout } = useAuth();
