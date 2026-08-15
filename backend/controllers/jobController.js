@@ -18,6 +18,29 @@ const getJobs = async (req, res) => {
   }
 };
 
+
+const getJob = async (req, res) => {
+  try {
+    const job = await Job.findOne({
+      _id: req.params.id,
+      user: req.user.id,
+    });
+
+    if (!job) {
+      return res.status(404).json({
+        message: "Job application not found",
+      });
+    }
+
+    res.status(200).json(job);
+  } catch (error) {
+    console.error("GET JOB ERROR:", error);
+    res.status(500).json({
+      message: "Unable to load job application",
+    });
+  }
+};
+
 const createJob = async (req, res) => {
   try {
     const {
@@ -128,6 +151,7 @@ const deleteJob = async (req, res) => {
 
 module.exports = {
   getJobs,
+  getJob,
   createJob,
   updateJob,
   deleteJob,

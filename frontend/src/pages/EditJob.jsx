@@ -10,6 +10,7 @@ export default function EditJob() {
   const [form, setForm] = useState({
     title: "",
     company: "",
+    location: "",
     status: "Applied",
   });
 

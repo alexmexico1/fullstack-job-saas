@@ -1,5 +1,8 @@
+import { useEffect, useState } from "react";
 import Sidebar from "../layout/Sidebar";
 import Navbar from "../layout/Navbar";
+import API from "../services/api";
+import toast from "react-hot-toast";
 import {
   ResponsiveContainer,
   LineChart,
@@ -12,33 +15,45 @@ import {
   Cell
 } from "recharts";
 
-// Static data for the Application Growth Line Chart
-const lineData = [
-  { month: "Jan", jobs: 4 },
-  { month: "Feb", jobs: 7 },
-  { month: "Mar", jobs: 12 },
-  { month: "Apr", jobs: 15 },
-  { month: "May", jobs: 22 },
-  { month: "Jun", jobs: 28 },
-];
-
-// Static data for the Status Distribution Pie Chart
-const pieData = [
-  { name: "Applied", value: 18 },
-  { name: "Interview", value: 8 },
-  { name: "Offer", value: 3 },
-  { name: "Rejected", value: 5 },
-];
-
-// Color palette matching your status badges
-const COLORS = [
-  "#3b82f6", // Applied (Blue)
-  "#f59e0b", // Interview (Orange)
-  "#10b981", // Offer (Green)
-  "#ef4444", // Rejected (Red)
-];
+const COLORS = ["#3b82f6", "#f59e0b", "#10b981", "#ef4444"];
 
 export default function Analytics() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    API.get("/jobs")
+      .then((res) => setJobs(Array.isArray(res.data) ? res.data : []))
+      .catch(() => toast.error("Unable to load analytics"))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const pieData = ["Applied", "Interview", "Offer", "Rejected"].map((name) => ({
+    name,
+    value: jobs.filter((job) => job.status === name).length,
+  }));
+
+  const months = Array.from({ length: 6 }, (_, index) => {
+    const date = new Date();
+    date.setMonth(date.getMonth() - (5 - index));
+    return {
+      month: date.toLocaleString("en-US", { month: "short" }),
+      jobs: jobs.filter((job) => {
+        const created = new Date(job.createdAt);
+        return (
+          created.getMonth() === date.getMonth() &&
+          created.getFullYear() === date.getFullYear()
+        );
+      }).length,
+    };
+  });
+
+  const total = jobs.length;
+  const interviews = jobs.filter((j) => j.status === "Interview").length;
+  const offers = jobs.filter((j) => j.status === "Offer").length;
+  const responseRate =
+    total > 0 ? Math.round(((interviews + offers) / total) * 100) : 0;
+
   return (
     <div style={styles.wrapper}>
       <Sidebar />
@@ -48,67 +63,85 @@ export default function Analytics() {
 
         <h1 style={styles.pageTitle}>Analytics Dashboard</h1>
 
-        {/* LINE CHART CARD */}
-        <div style={styles.card}>
-          <h3 style={styles.chartTitle}>Application Growth</h3>
-          <ResponsiveContainer width="100%" height={350}>
-            <LineChart data={lineData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-              <XAxis dataKey="month" tick={{ fill: "#6b7280" }} />
-              <YAxis tick={{ fill: "#6b7280" }} />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="jobs"
-                stroke="#4f46e5"
-                strokeWidth={4}
-                activeDot={{ r: 8 }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* LOWER GRID FOR PIE CHART & INSIGHTS */}
-        <div style={styles.grid}>
-          {/* PIE CHART */}
+        {loading ? (
           <div style={styles.card}>
-            <h3 style={styles.chartTitle}>Status Distribution</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={pieData}
-                  dataKey="value"
-                  outerRadius={100}
-                  label
-                >
-                  {pieData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
+            <h3>Loading analytics...</h3>
           </div>
-
-          {/* INSIGHTS PANEL */}
-          <div style={styles.card}>
-            <h3 style={styles.chartTitle}>Insights</h3>
-            <div style={styles.insightsList}>
-              <p style={styles.insightItem}>📈 Applications growing steadily</p>
-              <p style={styles.insightItem}>🎤 Interview rate improving</p>
-              <p style={styles.insightItem}>💰 Offers increasing</p>
-              <p style={styles.insightItem}>🚀 Strong hiring momentum</p>
+        ) : (
+          <>
+            <div style={styles.card}>
+              <h3 style={styles.chartTitle}>Application Growth</h3>
+              <ResponsiveContainer width="100%" height={350}>
+                <LineChart data={months} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <XAxis dataKey="month" tick={{ fill: "#6b7280" }} />
+                  <YAxis allowDecimals={false} tick={{ fill: "#6b7280" }} />
+                  <Tooltip />
+                  <Line
+                    type="monotone"
+                    dataKey="jobs"
+                    stroke="#4f46e5"
+                    strokeWidth={4}
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-          </div>
-        </div>
+
+            <div style={styles.grid}>
+              <div style={styles.card}>
+                <h3 style={styles.chartTitle}>Status Distribution</h3>
+
+                {total === 0 ? (
+                  <div style={styles.empty}>No applications yet.</div>
+                ) : (
+                  <ResponsiveContainer width="100%" height={300}>
+                    <PieChart>
+                      <Pie
+                        data={pieData}
+                        dataKey="value"
+                        nameKey="name"
+                        outerRadius={100}
+                        label
+                      >
+                        {pieData.map((entry, index) => (
+                          <Cell
+                            key={entry.name}
+                            fill={COLORS[index % COLORS.length]}
+                          />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
+
+              <div style={styles.card}>
+                <h3 style={styles.chartTitle}>Insights</h3>
+
+                <div style={styles.insightsList}>
+                  <p style={styles.insightItem}>
+                    Total applications: <strong>{total}</strong>
+                  </p>
+                  <p style={styles.insightItem}>
+                    Interviews: <strong>{interviews}</strong>
+                  </p>
+                  <p style={styles.insightItem}>
+                    Offers: <strong>{offers}</strong>
+                  </p>
+                  <p style={styles.insightItem}>
+                    Response rate: <strong>{responseRate}%</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
 }
 
-/* STYLES OBJECT */
 const styles = {
   wrapper: {
     display: "flex",
@@ -149,5 +182,12 @@ const styles = {
     margin: 0,
     fontSize: "16px",
     color: "#4b5563",
-  }
+  },
+  empty: {
+    height: "300px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#6b7280",
+  },
 };

@@ -16,7 +16,10 @@ app.use(cors({
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
+const jobRoutes = require('./routes/jobRoutes');
+
 app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Test Route
 app.get('/api', (req, res) => {

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const {
   getJobs,
+  getJob,
   createJob,
   updateJob,
   deleteJob,
@@ -11,6 +12,7 @@ const {
 const protect = require("../middleware/authMiddleware");
 
 router.get("/", protect, getJobs);
+router.get("/:id", protect, getJob);
 router.post("/", protect, createJob);
 router.put("/:id", protect, updateJob);
 router.delete("/:id", protect, deleteJob);

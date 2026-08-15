@@ -85,6 +85,7 @@ export default function AddJob() {
               onChange={handleChange}
               style={styles.input}
               placeholder="Chicago, IL"
+              required
             />
           </div>
 
