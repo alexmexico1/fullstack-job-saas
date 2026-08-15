@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local backup copies
+src.backup-*/
+*.stage2-backup
+*.before-*
+*.save
