@@ -28,3 +28,6 @@ src.backup-*/
 *.stage2-backup
 *.before-*
 *.save
+frontend-backups-*/
+.taskflow-backup-*/
+*.stage1-backup
