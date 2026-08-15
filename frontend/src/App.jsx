@@ -1,11 +1,10 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
 import AddJob from "./pages/AddJob";
 import EditJob from "./pages/EditJob";
 import Analytics from "./pages/Analytics";
 import Profile from "./pages/Profile";
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
@@ -14,9 +13,11 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 export default function App() {
   return (
     <Routes>
+      {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
 
+      {/* Protected routes */}
       <Route
         path="/"
         element={
@@ -61,6 +62,9 @@ export default function App() {
           </ProtectedRoute>
         }
       />
+
+      {/* Unknown URL */}
+      <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }

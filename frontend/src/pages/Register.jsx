@@ -1,6 +1,6 @@
 import { useState } from "react";
 import API from "../services/api";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -11,13 +11,34 @@ export default function Register() {
     password: "",
   });
 
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setError("");
+    setSuccess("");
+
     try {
-      await API.post("/auth/register", form);
-      navigate("/login");
+      const response = await API.post("/auth/register", form);
+
+      console.log("Registration successful:", response.data);
+
+      setSuccess("Registration successful. You can now log in.");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
     } catch (err) {
       console.error("Registration failed:", err);
+
+      const message =
+        err.response?.data?.message ||
+        err.message ||
+        "Registration failed.";
+
+      setError(message);
     }
   };
 
@@ -26,40 +47,63 @@ export default function Register() {
       <div style={styles.card}>
         <h2>Register</h2>
 
+        {error && <p style={styles.error}>{error}</p>}
+
+        {success && <p style={styles.success}>{success}</p>}
+
         <form onSubmit={handleSubmit}>
           <input
             placeholder="Name"
-            style={styles.input} // FIX: Added missing input styles
+            style={styles.input}
             value={form.name}
             onChange={(e) =>
-              setForm({ ...form, name: e.target.value })
+              setForm({
+                ...form,
+                name: e.target.value,
+              })
             }
+            required
           />
 
           <input
+            type="email"
             placeholder="Email"
-            style={styles.input} // FIX: Added missing input styles
+            style={styles.input}
             value={form.email}
             onChange={(e) =>
-              setForm({ ...form, email: e.target.value })
+              setForm({
+                ...form,
+                email: e.target.value,
+              })
             }
+            required
           />
 
           <input
             type="password"
             placeholder="Password"
-            style={styles.input} // FIX: Added missing input styles
+            style={styles.input}
             value={form.password}
             onChange={(e) =>
-              setForm({ ...form, password: e.target.value })
+              setForm({
+                ...form,
+                password: e.target.value,
+              })
             }
+            required
+            minLength={6}
           />
 
-          <button style={styles.button}>Register</button>
+          <button type="submit" style={styles.button}>
+            Register
+          </button>
         </form>
 
         <p style={styles.text}>
-          Already have account? <Link to="/login" style={styles.link}>Login</Link>
+          Already have an account?{" "}
+          <Link to="/login" style={styles.link}>
+            Login
+          </Link>
         </p>
       </div>
     </div>
@@ -68,12 +112,12 @@ export default function Register() {
 
 const styles = {
   container: {
-    height: "100vh",
+    minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     background: "#f3f4f6",
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: "system-ui, sans-serif",
   },
   card: {
     padding: "30px",
@@ -88,7 +132,7 @@ const styles = {
     margin: "10px 0",
     borderRadius: "6px",
     border: "1px solid #ddd",
-    boxSizing: "border-box"
+    boxSizing: "border-box",
   },
   button: {
     marginTop: "10px",
@@ -99,16 +143,28 @@ const styles = {
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "bold",
+  },
+  error: {
+    color: "#b91c1c",
+    background: "#fee2e2",
+    padding: "10px",
+    borderRadius: "6px",
+  },
+  success: {
+    color: "#166534",
+    background: "#dcfce7",
+    padding: "10px",
+    borderRadius: "6px",
   },
   text: {
     marginTop: "15px",
     textAlign: "center",
-    fontSize: "14px"
+    fontSize: "14px",
   },
   link: {
     color: "#4f46e5",
     textDecoration: "none",
-    fontWeight: "500"
-  }
+    fontWeight: "500",
+  },
 };

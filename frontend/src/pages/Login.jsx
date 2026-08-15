@@ -1,11 +1,9 @@
 import { useState } from "react";
 import API from "../services/api";
-// FIX: Point this directly to the file where we actually created useAuth
-import { useAuth } from "../services/authService.jsx"; 
-import { useNavigate, Link } from "react-router-dom";
+import { setToken } from "../services/auth";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const { login } = useAuth();
   const navigate = useNavigate();
 
   const [form, setForm] = useState({
@@ -13,17 +11,35 @@ export default function Login() {
     password: "",
   });
 
+  const [error, setError] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setError("");
+
     try {
-      const res = await API.post("/auth/login", form);
-      
-      // Use the email and password strings directly into your unified context login handler
-      await login(form.email, form.password);
-      
+      const { data } = await API.post(
+        "/auth/login",
+        form
+      );
+
+      setToken(data.token);
+
+      localStorage.setItem(
+        "user",
+        JSON.stringify(data.user)
+      );
+
       navigate("/");
     } catch (err) {
       console.error("Login failed:", err);
+
+      setError(
+        err.response?.data?.message ||
+          err.message ||
+          "Login failed."
+      );
     }
   };
 
@@ -32,31 +48,47 @@ export default function Login() {
       <div style={styles.card}>
         <h2>Login</h2>
 
+        {error && <p style={styles.error}>{error}</p>}
+
         <form onSubmit={handleSubmit}>
           <input
+            type="email"
             placeholder="Email"
             style={styles.input}
             value={form.email}
             onChange={(e) =>
-              setForm({ ...form, email: e.target.value })
+              setForm({
+                ...form,
+                email: e.target.value,
+              })
             }
+            required
           />
 
           <input
-            placeholder="Password"
             type="password"
+            placeholder="Password"
             style={styles.input}
             value={form.password}
             onChange={(e) =>
-              setForm({ ...form, password: e.target.value })
+              setForm({
+                ...form,
+                password: e.target.value,
+              })
             }
+            required
           />
 
-          <button style={styles.button}>Login</button>
+          <button type="submit" style={styles.button}>
+            Login
+          </button>
         </form>
 
         <p style={styles.text}>
-          No account? <Link to="/register" style={styles.link}>Register</Link>
+          No account?{" "}
+          <Link to="/register" style={styles.link}>
+            Register
+          </Link>
         </p>
       </div>
     </div>
@@ -65,12 +97,12 @@ export default function Login() {
 
 const styles = {
   container: {
-    height: "100vh",
+    minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     background: "#f3f4f6",
-    fontFamily: "system-ui, sans-serif"
+    fontFamily: "system-ui, sans-serif",
   },
   card: {
     padding: "30px",
@@ -85,7 +117,7 @@ const styles = {
     margin: "10px 0",
     borderRadius: "6px",
     border: "1px solid #ddd",
-    boxSizing: "border-box"
+    boxSizing: "border-box",
   },
   button: {
     marginTop: "10px",
@@ -96,16 +128,22 @@ const styles = {
     border: "none",
     borderRadius: "6px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "bold",
+  },
+  error: {
+    color: "#b91c1c",
+    background: "#fee2e2",
+    padding: "10px",
+    borderRadius: "6px",
   },
   text: {
     marginTop: "15px",
     textAlign: "center",
-    fontSize: "14px"
+    fontSize: "14px",
   },
   link: {
     color: "#4f46e5",
     textDecoration: "none",
-    fontWeight: "500"
-  }
+    fontWeight: "500",
+  },
 };
