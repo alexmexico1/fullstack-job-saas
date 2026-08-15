@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard";
 import Applications from "./pages/Applications";
+import Analytics from "./pages/Analytics";
 import AddJob from "./pages/AddJob";
 import EditJob from "./pages/EditJob";
 import Profile from "./pages/Profile";
