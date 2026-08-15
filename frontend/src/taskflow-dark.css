@@ -1,0 +1,283 @@
+/* =========================================================
+   TASKFLOW — PREMIUM DARK MODE
+   Independent theme layer.
+   Does not replace existing application logic.
+   ========================================================= */
+
+:root {
+  --tf-transition:
+    background-color .22s ease,
+    border-color .22s ease,
+    color .22s ease,
+    box-shadow .22s ease;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --tf-bg: #070b16;
+  --tf-bg-soft: #0b1020;
+  --tf-surface: #101728;
+  --tf-surface-2: #151d31;
+  --tf-surface-3: #1b263d;
+
+  --tf-border: rgba(148, 163, 184, .16);
+  --tf-border-strong: rgba(148, 163, 184, .25);
+
+  --tf-text: #f8fafc;
+  --tf-text-soft: #cbd5e1;
+  --tf-text-muted: #94a3b8;
+
+  --tf-primary: #7c5cff;
+  --tf-primary-2: #4f8cff;
+  --tf-cyan: #22d3ee;
+  --tf-green: #34d399;
+  --tf-yellow: #fbbf24;
+  --tf-red: #fb7185;
+
+  --tf-shadow:
+    0 20px 60px rgba(0, 0, 0, .38);
+
+  --tf-glow:
+    0 0 45px rgba(124, 92, 255, .16);
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+  background:
+    radial-gradient(
+      circle at 10% 0%,
+      rgba(124, 92, 255, .13),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 10%,
+      rgba(34, 211, 238, .08),
+      transparent 28%
+    ),
+    #070b16 !important;
+
+  color: var(--tf-text);
+}
+
+html[data-theme="dark"] body {
+  min-height: 100vh;
+}
+
+html[data-theme="dark"] #root {
+  min-height: 100vh;
+}
+
+/* Main surfaces */
+html[data-theme="dark"] .tf-page,
+html[data-theme="dark"] .tf-dashboard,
+html[data-theme="dark"] .tf-main,
+html[data-theme="dark"] .tf-content,
+html[data-theme="dark"] .tf-shell {
+  background: transparent !important;
+  color: var(--tf-text);
+}
+
+/* Cards / panels */
+html[data-theme="dark"] .tf-panel,
+html[data-theme="dark"] .tf-kpi-card,
+html[data-theme="dark"] .tf-application-row,
+html[data-theme="dark"] .tf-insight-card,
+html[data-theme="dark"] .tf-card,
+html[data-theme="dark"] .tf-stat-card,
+html[data-theme="dark"] .tf-empty-state {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(21, 29, 49, .96),
+      rgba(10, 15, 29, .96)
+    ) !important;
+
+  border-color: var(--tf-border) !important;
+  color: var(--tf-text) !important;
+  box-shadow: var(--tf-shadow);
+}
+
+/* Headers */
+html[data-theme="dark"] .tf-panel-header,
+html[data-theme="dark"] .tf-section-header {
+  color: var(--tf-text);
+}
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] strong {
+  color: var(--tf-text);
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] span {
+  border-color: var(--tf-border);
+}
+
+/* Navigation */
+html[data-theme="dark"] nav,
+html[data-theme="dark"] .tf-sidebar,
+html[data-theme="dark"] .tf-nav,
+html[data-theme="dark"] .tf-header {
+  background:
+    rgba(8, 12, 24, .88) !important;
+
+  border-color: var(--tf-border) !important;
+  backdrop-filter: blur(22px);
+}
+
+/* Inputs */
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  background: #0c1324 !important;
+  color: var(--tf-text) !important;
+  border-color: var(--tf-border-strong) !important;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #64748b !important;
+}
+
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] select:focus {
+  border-color: rgba(124, 92, 255, .75) !important;
+  box-shadow: 0 0 0 4px rgba(124, 92, 255, .12) !important;
+}
+
+/* Tables / rows */
+html[data-theme="dark"] table,
+html[data-theme="dark"] th,
+html[data-theme="dark"] td {
+  border-color: var(--tf-border) !important;
+}
+
+html[data-theme="dark"] tr:hover,
+html[data-theme="dark"] .tf-application-row:hover {
+  background: rgba(124, 92, 255, .07) !important;
+}
+
+/* Buttons */
+html[data-theme="dark"] button {
+  border-color: var(--tf-border);
+}
+
+html[data-theme="dark"] .tf-primary-button,
+html[data-theme="dark"] .tf-primary,
+html[data-theme="dark"] button[class*="primary"] {
+  color: white !important;
+  background:
+    linear-gradient(135deg, #7c5cff, #4f8cff) !important;
+  border-color: transparent !important;
+  box-shadow:
+    0 10px 30px rgba(79, 140, 255, .22);
+}
+
+html[data-theme="dark"] .tf-secondary-button {
+  background: rgba(255,255,255,.05) !important;
+  color: var(--tf-text) !important;
+  border-color: var(--tf-border-strong) !important;
+}
+
+/* Status colors */
+html[data-theme="dark"] .tf-status {
+  border-color: rgba(255,255,255,.10);
+}
+
+html[data-theme="dark"] .tf-progress-track {
+  background: rgba(148, 163, 184, .12) !important;
+}
+
+/* Premium glow */
+html[data-theme="dark"] .tf-kpi-card:first-child {
+  box-shadow:
+    0 20px 55px rgba(124, 92, 255, .14);
+}
+
+html[data-theme="dark"] .tf-kpi-icon {
+  box-shadow:
+    0 8px 25px rgba(124, 92, 255, .18);
+}
+
+/* Scrollbar */
+html[data-theme="dark"] ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #070b16;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #26324d;
+  border-radius: 999px;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: #394968;
+}
+
+/* Theme toggle */
+.tf-theme-toggle {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9999;
+
+  width: 48px;
+  height: 48px;
+
+  display: grid;
+  place-items: center;
+
+  border: 1px solid rgba(124, 92, 255, .25);
+  border-radius: 15px;
+
+  color: #fff;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(124, 92, 255, .95),
+      rgba(79, 140, 255, .95)
+    );
+
+  box-shadow:
+    0 12px 35px rgba(0, 0, 0, .25),
+    0 0 30px rgba(124, 92, 255, .18);
+
+  cursor: pointer;
+
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
+
+.tf-theme-toggle:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, .30),
+    0 0 38px rgba(124, 92, 255, .25);
+}
+
+.tf-theme-toggle:active {
+  transform: translateY(0);
+}
+
+.tf-theme-toggle svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 700px) {
+  .tf-theme-toggle {
+    right: 16px;
+    bottom: 16px;
+  }
+}

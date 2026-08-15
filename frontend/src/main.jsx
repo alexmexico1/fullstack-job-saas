@@ -23,9 +23,11 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./services/authService.jsx";
 import { ThemeProvider } from "./context/ThemeContext.jsx";
 import App from "./App.jsx";
+import TaskFlowThemeToggle from "./TaskFlowThemeToggle.jsx";
 import "./index.css";
 import "./taskflow-layout.css";
 import "./taskflow-premium.css";
+import "./taskflow-dark.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -33,6 +35,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       <ThemeProvider>
         <AuthProvider>
           <App />
+          <TaskFlowThemeToggle />
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
