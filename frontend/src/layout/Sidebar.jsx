@@ -2,31 +2,27 @@ import { NavLink } from "react-router-dom";
 import {
   FiGrid,
   FiBriefcase,
-  FiPlusCircle,
+  FiPlus,
   FiBarChart2,
   FiUser,
   FiSettings,
   FiLogOut,
+  FiChevronRight,
 } from "react-icons/fi";
 import { useAuth } from "../services/authService.jsx";
 
 const navigation = [
   {
-    label: "Overview",
+    label: "Workspace",
     items: [
       { label: "Dashboard", path: "/", icon: FiGrid },
+      { label: "Applications", path: "/applications", icon: FiBriefcase },
     ],
   },
   {
-    label: "Applications",
+    label: "Management",
     items: [
-      { label: "All Applications", path: "/applications", icon: FiBriefcase },
-      { label: "Add Application", path: "/add-job", icon: FiPlusCircle },
-    ],
-  },
-  {
-    label: "Insights",
-    items: [
+      { label: "Add Application", path: "/add-job", icon: FiPlus },
       { label: "Analytics", path: "/analytics", icon: FiBarChart2 },
     ],
   },
@@ -43,46 +39,55 @@ export default function Sidebar() {
   const { user, logout } = useAuth();
 
   const displayName = user?.name || "Alex Obi";
-  const email = user?.email || "";
+  const email = user?.email || "Account";
 
   return (
     <aside className="tf-sidebar">
       <div className="tf-brand">
-        <div className="tf-brand-mark">T</div>
+        <div className="tf-brand-mark">
+          <span>T</span>
+        </div>
 
-        <div>
+        <div className="tf-brand-copy">
           <div className="tf-brand-name">TaskFlow</div>
           <div className="tf-brand-subtitle">Job workspace</div>
         </div>
       </div>
 
-      <nav className="tf-sidebar-nav">
-        {navigation.map((section) => (
-          <div className="tf-nav-section" key={section.label}>
-            <div className="tf-nav-heading">{section.label}</div>
+      <div className="tf-sidebar-content">
+        <nav className="tf-sidebar-nav">
+          {navigation.map((section) => (
+            <div className="tf-nav-section" key={section.label}>
+              <div className="tf-nav-heading">{section.label}</div>
 
-            {section.items.map((item) => {
-              const Icon = item.icon;
+              {section.items.map((item) => {
+                const Icon = item.icon;
 
-              return (
-                <NavLink
-                  key={item.path}
-                  to={item.path}
-                  end={item.path === "/"}
-                  className={({ isActive }) =>
-                    `tf-nav-link ${isActive ? "active" : ""}`
-                  }
-                >
-                  <Icon size={18} strokeWidth={1.8} />
-                  <span>{item.label}</span>
-                </NavLink>
-              );
-            })}
-          </div>
-        ))}
-      </nav>
+                return (
+                  <NavLink
+                    key={item.path}
+                    to={item.path}
+                    end={item.path === "/"}
+                    className={({ isActive }) =>
+                      `tf-nav-link ${isActive ? "active" : ""}`
+                    }
+                  >
+                    <span className="tf-nav-icon">
+                      <Icon size={17} />
+                    </span>
 
-      <div className="tf-sidebar-bottom">
+                    <span className="tf-nav-label">{item.label}</span>
+
+                    <FiChevronRight className="tf-nav-arrow" size={14} />
+                  </NavLink>
+                );
+              })}
+            </div>
+          ))}
+        </nav>
+      </div>
+
+      <div className="tf-sidebar-footer">
         <div className="tf-user-card">
           <div className="tf-user-avatar">
             {displayName.charAt(0).toUpperCase()}
@@ -90,7 +95,7 @@ export default function Sidebar() {
 
           <div className="tf-user-details">
             <strong>{displayName}</strong>
-            <span>{email || "Account"}</span>
+            <span>{email}</span>
           </div>
 
           <button
@@ -99,7 +104,7 @@ export default function Sidebar() {
             aria-label="Log out"
             title="Log out"
           >
-            <FiLogOut size={17} />
+            <FiLogOut size={16} />
           </button>
         </div>
       </div>

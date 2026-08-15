@@ -1,558 +1,366 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; 
-import API from "../services/api";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  FiArrowUpRight,
+  FiBriefcase,
+  FiCalendar,
+  FiCheckCircle,
+  FiClock,
+  FiPlus,
+  FiSearch,
+  FiTrendingUp,
+  FiXCircle,
+} from "react-icons/fi";
+import toast from "react-hot-toast";
+
 import Sidebar from "../layout/Sidebar";
 import Navbar from "../layout/Navbar";
-import toast from "react-hot-toast";
+import API from "../services/api";
 import { useAuth } from "../services/authService.jsx";
 
+const statusConfig = {
+  Applied: {
+    className: "status-applied",
+    icon: FiClock,
+  },
+  Interview: {
+    className: "status-interview",
+    icon: FiCalendar,
+  },
+  Offer: {
+    className: "status-offer",
+    icon: FiCheckCircle,
+  },
+  Rejected: {
+    className: "status-rejected",
+    icon: FiXCircle,
+  },
+};
+
 export default function Dashboard() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
+
   const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
   const [search, setSearch] = useState("");
-
-  // STATE CONFIGURATIONS
-  const [darkMode, setDarkMode] = useState(false);
-  const [loading, setLoading] = useState(true); 
-  const [showMenu, setShowMenu] = useState(false); 
-
-  // MODAL TOGGLE STATES
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [editingJob, setEditingJob] = useState(null);
-
-  // FORM INPUT TRACKING STATES
-  const [newJobData, setNewJobData] = useState({ company: "", title: "", status: "Applied" });
-  const [editJobData, setEditJobData] = useState({ company: "", title: "", status: "Applied" });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchJobs();
+    loadJobs();
   }, []);
 
-  useEffect(() => {
-    const filtered = jobs.filter(
-      (job) =>
-        job.company?.toLowerCase().includes(search.toLowerCase()) ||
-        job.title?.toLowerCase().includes(search.toLowerCase())
-    );
-    setFilteredJobs(filtered);
-  }, [search, jobs]);
-
-  const fetchJobs = async () => {
+  const loadJobs = async () => {
     try {
       setLoading(true);
-      const res = await API.get("/jobs");
-      setJobs(res.data);
-      setFilteredJobs(res.data);
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+      const response = await API.get("/jobs");
+      setJobs(Array.isArray(response.data) ? response.data : []);
+    } catch (error) {
+      toast.error("Unable to load applications");
     } finally {
-      setLoading(false); 
+      setLoading(false);
     }
   };
 
-  const handleSaveNewJob = () => {
-    if (!newJobData.company || !newJobData.title) {
-      toast.error("Please fill in all fields");
-      return;
+  const stats = useMemo(() => {
+    const total = jobs.length;
+    const applied = jobs.filter((job) => job.status === "Applied").length;
+    const interviews = jobs.filter((job) => job.status === "Interview").length;
+    const offers = jobs.filter((job) => job.status === "Offer").length;
+    const rejected = jobs.filter((job) => job.status === "Rejected").length;
+
+    const responseRate =
+      total > 0 ? Math.round(((interviews + offers) / total) * 100) : 0;
+
+    return {
+      total,
+      applied,
+      interviews,
+      offers,
+      rejected,
+      responseRate,
+    };
+  }, [jobs]);
+
+  const filteredJobs = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    if (!query) {
+      return jobs.slice(0, 6);
     }
-    
-    const temporaryJob = { _id: Date.now().toString(), ...newJobData };
-    setJobs([temporaryJob, ...jobs]);
-    toast.success("Job successfully saved 🎉");
-    
-    setNewJobData({ company: "", title: "", status: "Applied" });
-    setShowAddModal(false);
-  };
 
-  const handleUpdateJob = () => {
-    if (!editJobData.company || !editJobData.title) {
-      toast.error("Fields cannot be empty");
-      return;
-    }
-
-    const updatedJobsList = jobs.map((j) => 
-      j._id === editingJob._id ? { ...j, ...editJobData } : j
-    );
-    
-    setJobs(updatedJobsList);
-    toast.success("Job successfully saved 🎉");
-    setEditingJob(null);
-  };
-
-  const deleteJob = async (id) => {
-    if (!window.confirm("Delete this job?")) return;
-
-    try {
-      await API.delete(`/jobs/${id}`);
-      toast.success("Job deleted");
-      fetchJobs();
-    } catch {
-      setJobs(jobs.filter(j => j._id !== id));
-      toast.success("Removed locally");
-    }
-  };
-
-  const stats = {
-    applied: jobs.filter((j) => j.status === "Applied").length,
-    interview: jobs.filter((j) => j.status === "Interview").length,
-    offer: jobs.filter((j) => j.status === "Offer").length,
-    rejected: jobs.filter((j) => j.status === "Rejected").length,
-  };
+    return jobs
+      .filter(
+        (job) =>
+          job.company?.toLowerCase().includes(query) ||
+          job.title?.toLowerCase().includes(query) ||
+          job.location?.toLowerCase().includes(query) ||
+          job.status?.toLowerCase().includes(query)
+      )
+      .slice(0, 6);
+  }, [jobs, search]);
 
   return (
-    <div style={styles.wrapper}>
+    <div className="tf-app-shell">
       <Sidebar />
 
-      <div
-        style={{
-          ...styles.main,
-          background: darkMode ? "#0f172a" : "linear-gradient(120deg, #f4f6fb, #eef2ff)",
-          color: darkMode ? "#fff" : "#000",
-        }}
-      >
+      <main className="tf-main">
         <Navbar />
 
-        {/* HERO SECTION */}
-        <div style={styles.hero}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+        <section className="tf-dashboard">
+          <div className="tf-dashboard-header">
             <div>
-              <h1>Welcome back, {user?.name || "User"}!</h1>
-              <p>Track applications, interviews and offers in one place.</p>
+              <span className="tf-eyebrow">WORKSPACE OVERVIEW</span>
+
+              <h1>
+                Good morning,{" "}
+                <span>{user?.name?.split(" ")[0] || "Alex"}</span>
+              </h1>
+
+              <p>
+                Keep your job search organized and stay ahead of every
+                opportunity.
+              </p>
             </div>
-            
-            {/* UTILITY CONTROL ROW */}
-            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-              <button
-                onClick={() => setDarkMode(!darkMode)}
-                style={{
-                  padding: "8px 12px",
-                  borderRadius: "8px",
-                  border: "none",
-                  cursor: "pointer",
-                  background: darkMode ? "#fff" : "#111",
-                  color: darkMode ? "#000" : "#fff",
-                  fontWeight: "bold"
-                }}
-              >
-                {darkMode ? "☀ Light Mode" : "🌙 Dark Mode"}
-              </button>
 
-              {/* ACCOUNT DROPDOWN BAR LAYOUT */}
-              <div style={{ position: "relative" }}>
-                <button
-                  onClick={() => setShowMenu(!showMenu)}
-                  style={{
-                    padding: "8px 12px",
-                    borderRadius: "10px",
-                    border: "none",
-                    cursor: "pointer",
-                    background: "#4f46e5",
-                    color: "#fff",
-                    fontWeight: "bold"
-                  }}
-                >
-                  👤 {user?.name || "Account"}
-                </button>
+            <Link to="/add-job" className="tf-primary-button">
+              <FiPlus size={18} />
+              Add application
+            </Link>
+          </div>
 
-                {showMenu && (
-                  <div style={{ 
-                    ...styles.dropdown, 
-                    background: darkMode ? "#1e293b" : "#fff", 
-                    color: darkMode ? "#fff" : "#000",
-                    border: darkMode ? "1px solid #334155" : "none"
-                  }}>
-                    <p style={{ margin: "4px 0", cursor: "pointer" }}>My Profile</p>
-                    <p style={{ margin: "4px 0", cursor: "pointer" }}>Settings</p>
-                    <hr style={{ borderColor: darkMode ? "#334155" : "#eee" }} />
-                    <p
-                      style={{ color: "red", cursor: "pointer", margin: "4px 0" }}
-                      onClick={() => {
-                        logout();
-                        setShowMenu(false);
-                        toast.success("Logged out successfully");
-                      }}
-                    >
-                      Logout
-                    </p>
+          <section className="tf-kpi-grid">
+            <KpiCard
+              icon={FiBriefcase}
+              label="Total applications"
+              value={stats.total}
+              detail="All tracked opportunities"
+              className="blue"
+            />
+
+            <KpiCard
+              icon={FiClock}
+              label="In progress"
+              value={stats.applied}
+              detail="Applications awaiting response"
+              className="violet"
+            />
+
+            <KpiCard
+              icon={FiCalendar}
+              label="Interviews"
+              value={stats.interviews}
+              detail="Active interview stages"
+              className="amber"
+            />
+
+            <KpiCard
+              icon={FiCheckCircle}
+              label="Offers"
+              value={stats.offers}
+              detail="Successful opportunities"
+              className="green"
+            />
+          </section>
+
+          <section className="tf-dashboard-grid">
+            <div className="tf-panel tf-applications-panel">
+              <div className="tf-panel-header">
+                <div>
+                  <h2>Recent applications</h2>
+                  <p>Your latest tracked opportunities</p>
+                </div>
+
+                <Link to="/applications" className="tf-text-link">
+                  View all
+                  <FiArrowUpRight size={16} />
+                </Link>
+              </div>
+
+              <div className="tf-search-wrapper">
+                <FiSearch size={17} />
+
+                <input
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder="Search applications..."
+                  aria-label="Search applications"
+                />
+              </div>
+
+              {loading ? (
+                <div className="tf-loading-list">
+                  {[1, 2, 3, 4].map((item) => (
+                    <div className="tf-skeleton-row" key={item}>
+                      <div />
+                      <div />
+                      <div />
+                    </div>
+                  ))}
+                </div>
+              ) : filteredJobs.length === 0 ? (
+                <EmptyApplications />
+              ) : (
+                <div className="tf-application-list">
+                  {filteredJobs.map((job) => (
+                    <ApplicationRow key={job._id} job={job} />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="tf-side-column">
+              <div className="tf-panel tf-progress-panel">
+                <div className="tf-panel-header">
+                  <div>
+                    <h2>Application pipeline</h2>
+                    <p>Current search progress</p>
                   </div>
-                )}
+
+                  <FiTrendingUp size={20} />
+                </div>
+
+                <div className="tf-pipeline">
+                  <PipelineRow
+                    label="Applied"
+                    value={stats.applied}
+                    total={stats.total}
+                    className="blue"
+                  />
+
+                  <PipelineRow
+                    label="Interview"
+                    value={stats.interviews}
+                    total={stats.total}
+                    className="amber"
+                  />
+
+                  <PipelineRow
+                    label="Offers"
+                    value={stats.offers}
+                    total={stats.total}
+                    className="green"
+                  />
+
+                  <PipelineRow
+                    label="Rejected"
+                    value={stats.rejected}
+                    total={stats.total}
+                    className="red"
+                  />
+                </div>
+              </div>
+
+              <div className="tf-insight-card">
+                <div className="tf-insight-icon">
+                  <FiTrendingUp size={19} />
+                </div>
+
+                <div>
+                  <strong>{stats.responseRate}% response rate</strong>
+                  <p>
+                    {stats.total
+                      ? "Keep applying consistently to increase your chances."
+                      : "Start tracking applications to unlock your insights."}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-          
-          <button
-            onClick={() => setShowAddModal(true)}
-            style={{
-              marginTop: "15px",
-              padding: "10px 15px",
-              border: "none",
-              borderRadius: "10px",
-              background: "#fff",
-              color: "#4f46e5",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-          >
-            + Add Job
-          </button>
+          </section>
+        </section>
+      </main>
+    </div>
+  );
+}
+
+function KpiCard({ icon: Icon, label, value, detail, className }) {
+  return (
+    <div className={`tf-kpi-card ${className}`}>
+      <div className="tf-kpi-top">
+        <div className="tf-kpi-icon">
+          <Icon size={19} />
         </div>
 
-        {/* SKELETON DISPLAY SWITCH */}
-        {loading ? (
-          <div 
-            style={{
-              ...styles.skeletonGrid,
-              gridTemplateColumns: window.innerWidth < 768 ? "1fr" : "repeat(4, 1fr)",
-              marginBottom: "25px"
-            }}
-          >
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} style={{ ...styles.skeletonCard, background: darkMode ? "linear-gradient(90deg, #1e293b, #334155, #1e293b)" : "linear-gradient(90deg, #eee, #f5f5f5, #eee)" }}></div>
-            ))}
-          </div>
-        ) : (
-          /* STATS OVERVIEW CARDS */
-          <div 
-            style={{
-              ...styles.statsGrid,
-              gridTemplateColumns: window.innerWidth < 768 ? "1fr" : "repeat(4, 1fr)"
-            }}
-          >
-            <Card title="Applications" value={stats.applied} darkMode={darkMode} />
-            <Card title="Interviews" value={stats.interview} darkMode={darkMode} />
-            <Card title="Offers" value={stats.offer} darkMode={darkMode} />
-            <Card title="Rejected" value={stats.rejected} darkMode={darkMode} />
-          </div>
-        )}
+        <span className="tf-kpi-label">{label}</span>
+      </div>
 
-        {/* DATA CONTAINER GRID */}
-        <div style={{ ...styles.tableContainer, background: darkMode ? "#1e293b" : "#fff", border: darkMode ? "1px solid #334155" : "none" }}>
-          <div style={styles.header}>
-            <h2 style={{ color: darkMode ? "#fff" : "inherit" }}>Recent Applications</h2>
+      <strong>{value}</strong>
 
-            <input
-              placeholder="Search jobs..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              style={{ ...styles.search, background: darkMode ? "#0f172a" : "#fff", color: darkMode ? "#fff" : "#000", borderColor: darkMode ? "#475569" : "#ddd" }}
-            />
-          </div>
+      <span className="tf-kpi-detail">{detail}</span>
+    </div>
+  );
+}
 
-          <table style={styles.table}>
-            <thead>
-              <tr style={{ color: darkMode ? "#94a3b8" : "inherit" }}>
-                <th>Company</th>
-                <th>Position</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+function ApplicationRow({ job }) {
+  const config = statusConfig[job.status] || statusConfig.Applied;
+  const StatusIcon = config.icon;
 
-            <tbody>
-              {filteredJobs.length === 0 ? (
-                <tr>
-                  <td colSpan="4" style={{ textAlign: "center", padding: "40px", color: darkMode ? "#94a3b8" : "#64748b", fontWeight: "500" }}>
-                    🚀 No jobs found. Start by adding your first job.
-                  </td>
-                </tr>
-              ) : (
-                filteredJobs.map((job) => (
-                  <tr key={job._id} style={{ ...styles.row, background: darkMode ? "#334155" : "#fff" }}>
-                    <td style={{ color: darkMode ? "#fff" : "inherit", padding: "12px" }}>{job.company}</td>
-                    <td style={{ color: darkMode ? "#fff" : "inherit" }}>{job.title}</td>
+  return (
+    <div className="tf-application-row">
+      <div className="tf-company-avatar">
+        {job.company?.charAt(0)?.toUpperCase() || "J"}
+      </div>
 
-                    <td>
-                      <span
-                        style={{
-                          padding: "6px 10px",
-                          borderRadius: "20px",
-                          color: "#fff",
-                          fontSize: "12px",
-                          background:
-                            job.status === "Applied"
-                              ? "#3b82f6"
-                              : job.status === "Interview"
-                              ? "#f59e0b"
-                              : job.status === "Offer"
-                              ? "#10b981"
-                              : "#ef4444",
-                        }}
-                      >
-                        {job.status}
-                      </span>
-                    </td>
+      <div className="tf-application-main">
+        <strong>{job.title || "Untitled position"}</strong>
+        <span>
+          {job.company || "Unknown company"}
+          {job.location ? ` • ${job.location}` : ""}
+        </span>
+      </div>
 
-                    <td>
-                      <button
-                        onClick={() => {
-                          setEditingJob(job);
-                          setEditJobData({ company: job.company, title: job.title, status: job.status });
-                        }}
-                        style={{
-                          marginRight: "10px",
-                          background: "#f59e0b",
-                          border: "none",
-                          padding: "5px 10px",
-                          borderRadius: "6px",
-                          cursor: "pointer",
-                          color: "#fff",
-                        }}
-                      >
-                        Edit
-                      </button>
-                      {" | "}
-                      <button
-                        onClick={() => deleteJob(job._id)}
-                        style={styles.deleteBtn}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+      <span className={`tf-status ${config.className}`}>
+        <StatusIcon size={13} />
+        {job.status || "Applied"}
+      </span>
 
-        {/* Lower Dashboard Widget Panels */}
-        <div style={styles.bottomGrid}>
-          <div style={{ ...styles.activityCard, background: darkMode ? "#1e293b" : "#fff", border: darkMode ? "1px solid #334155" : "none" }}>
-            <h3>Recent Activity</h3>
-            <p>✅ New application submitted</p>
-            <p>🎤 Interview scheduled</p>
-            <p>🎉 Offer received</p>
-            <p>👤 Profile updated</p>
-          </div>
+      <span className="tf-row-date">
+        {job.createdAt
+          ? new Date(job.createdAt).toLocaleDateString(undefined, {
+              month: "short",
+              day: "numeric",
+            })
+          : "Recently"}
+      </span>
+    </div>
+  );
+}
 
-          <div style={{ ...styles.activityCard, background: darkMode ? "#1e293b" : "#fff", border: darkMode ? "1px solid #334155" : "none" }}>
-            <h3>Quick Actions</h3>
-            <button 
-              onClick={() => setShowAddModal(true)} 
-              style={{ ...styles.actionBtn, width: "100%", border: "none", cursor: "pointer" }}
-            >
-              + Add Job
-            </button>
-            <Link to="/analytics" style={styles.actionBtn}>
-              Analytics
-            </Link>
-            <Link to="/profile" style={styles.actionBtn}>
-              Profile
-            </Link>
-          </div>
-        </div>
+function PipelineRow({ label, value, total, className }) {
+  const percentage = total ? Math.round((value / total) * 100) : 0;
 
-        {/* ADD JOB MODAL */}
-        {showAddModal && (
-          <div style={styles.modalOverlay}>
-            <div style={{ ...styles.modal, background: darkMode ? "#1e293b" : "#fff" }}>
-              <h2>Add Job</h2>
+  return (
+    <div className="tf-pipeline-row">
+      <div className="tf-pipeline-label">
+        <span>{label}</span>
+        <strong>{value}</strong>
+      </div>
 
-              <input 
-                placeholder="Company" 
-                style={{ ...styles.input, background: darkMode ? "#334155" : "#fff", color: darkMode ? "#fff" : "#000", borderColor: darkMode ? "#475569" : "#ddd" }} 
-                value={newJobData.company}
-                onChange={(e) => setNewJobData({ ...newJobData, company: e.target.value })}
-              />
-              <input 
-                placeholder="Job Title" 
-                style={{ ...styles.input, background: darkMode ? "#334155" : "#fff", color: darkMode ? "#fff" : "#000", borderColor: darkMode ? "#475569" : "#ddd" }} 
-                value={newJobData.title}
-                onChange={(e) => setNewJobData({ ...newJobData, title: e.target.value })}
-              />
-
-              <select 
-                style={{ ...styles.input, background: darkMode ? "#334155" : "#fff", color: darkMode ? "#fff" : "#000", borderColor: darkMode ? "#475569" : "#ddd" }}
-                value={newJobData.status}
-                onChange={(e) => setNewJobData({ ...newJobData, status: e.target.value })}
-              >
-                <option value="Applied">Applied</option>
-                <option value="Interview">Interview</option>
-                <option value="Offer">Offer</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-
-              <button style={styles.saveBtn} onClick={handleSaveNewJob}>
-                Save
-              </button>
-
-              <button style={styles.cancelBtn} onClick={() => setShowAddModal(false)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* EDIT JOB MODAL */}
-        {editingJob && (
-          <div style={styles.modalOverlay}>
-            <div style={{ ...styles.modal, background: darkMode ? "#1e293b" : "#fff" }}>
-              <h2>Edit Job</h2>
-
-              <input
-                value={editJobData.company}
-                style={{ ...styles.input, background: darkMode ? "#334155" : "#fff", color: darkMode ? "#fff" : "#000", borderColor: darkMode ? "#475569" : "#ddd" }}
-                onChange={(e) => setEditJobData({ ...editJobData, company: e.target.value })}
-              />
-
-              <input
-                value={editJobData.title}
-                style={{ ...styles.input, background: darkMode ? "#334155" : "#fff", color: darkMode ? "#fff" : "#000", borderColor: darkMode ? "#475569" : "#ddd" }}
-                onChange={(e) => setEditJobData({ ...editJobData, title: e.target.value })}
-              />
-
-              <select
-                value={editJobData.status}
-                style={{ ...styles.input, background: darkMode ? "#334155" : "#fff", color: darkMode ? "#fff" : "#000", borderColor: darkMode ? "#475569" : "#ddd" }}
-                onChange={(e) => setEditJobData({ ...editJobData, status: e.target.value })}
-              >
-                <option value="Applied">Applied</option>
-                <option value="Interview">Interview</option>
-                <option value="Offer">Offer</option>
-                <option value="Rejected">Rejected</option>
-              </select>
-
-              <button style={styles.saveBtn} onClick={handleUpdateJob}>
-                Update
-              </button>
-
-              <button style={styles.cancelBtn} onClick={() => setEditingJob(null)}>
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-
+      <div className="tf-progress-track">
+        <div
+          className={`tf-progress-fill ${className}`}
+          style={{ width: `${percentage}%` }}
+        />
       </div>
     </div>
   );
 }
 
-function Card({ title, value, darkMode }) {
+function EmptyApplications() {
   return (
-    <div
-      style={{
-        ...styles.kpiCard,
-        background: darkMode ? "linear-gradient(135deg, #1e293b, #334155)" : "linear-gradient(135deg, #ffffff, #f9fafb)",
-        borderColor: darkMode ? "#475569" : "#eee"
-      }}
-      onMouseOver={(e) => (e.currentTarget.style.transform = "translateY(-5px)")}
-      onMouseOut={(e) => (e.currentTarget.style.transform = "translateY(0px)")}
-    >
-      <h2 style={{ color: darkMode ? "#fff" : "inherit" }}>{value}</h2>
-      <p style={{ color: darkMode ? "#94a3b8" : "inherit" }}>{title}</p>
+    <div className="tf-empty-state">
+      <div className="tf-empty-icon">
+        <FiBriefcase size={22} />
+      </div>
+
+      <h3>No applications yet</h3>
+
+      <p>
+        Start building your job pipeline by adding your first application.
+      </p>
+
+      <Link to="/add-job" className="tf-secondary-button">
+        <FiPlus size={16} />
+        Add application
+      </Link>
     </div>
   );
 }
-
-const styles = {
-  wrapper: { display: "flex" },
-  main: {
-    flex: 1,
-    padding: "25px",
-    minHeight: "100vh",
-    transition: "background 0.3s ease, color 0.3s ease"
-  },
-  hero: {
-    background: "linear-gradient(135deg,#4f46e5,#2563eb)",
-    color: "#fff",
-    padding: "30px",
-    borderRadius: "18px",
-    marginBottom: "25px",
-  },
-  statsGrid: {
-    display: "grid",
-    gap: "15px",
-    marginBottom: "25px",
-  },
-  skeletonGrid: {
-    display: "grid",
-    gap: "15px",
-  },
-  skeletonCard: {
-    height: "120px", 
-    borderRadius: "14px",
-    backgroundSize: "200% 100%",
-    animation: "shimmer 1.5s infinite",
-  },
-  kpiCard: {
-    borderRadius: "20px",
-    padding: "25px",
-    boxShadow: "0 10px 35px rgba(0,0,0,0.06)",
-    transition: "0.3s",
-    border: "1px solid",
-    minHeight: "120px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  tableContainer: {
-    padding: "20px",
-    borderRadius: "14px",
-    boxShadow: "0 2px 10px rgba(0,0,0,.05)",
-  },
-  header: { display: "flex", justifyContent: "space-between", marginBottom: "20px" },
-  search: { padding: "10px", width: "250px", borderRadius: "8px", border: "1px solid" },
-  table: { width: "100%", borderCollapse: "separate", borderSpacing: "0 10px" },
-  row: { boxShadow: "0 5px 15px rgba(0,0,0,0.05)", borderRadius: "12px" },
-  deleteBtn: { border: "none", background: "transparent", color: "red", cursor: "pointer" },
-  bottomGrid: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px", marginTop: "20px" },
-  activityCard: { 
-    padding: "20px", 
-    borderRadius: "16px", 
-    boxShadow: "0 2px 10px rgba(0,0,0,.05)",
-    minHeight: "120px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  actionBtn: {
-    display: "block",
-    marginTop: "10px",
-    padding: "12px",
-    textDecoration: "none",
-    background: "#4f46e5",
-    color: "#fff",
-    borderRadius: "10px",
-    textAlign: "center",
-    fontSize: "14px",
-    fontFamily: "inherit"
-  },
-  dropdown: {
-    position: "absolute",
-    right: 0,
-    top: "45px",
-    padding: "12px",
-    borderRadius: "10px",
-    boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-    width: "150px",
-    zIndex: 100,
-    display: "flex",
-    flexDirection: "column",
-    gap: "4px"
-  },
-  modalOverlay: {
-    position: "fixed",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background: "rgba(0,0,0,0.5)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    zIndex: 999,
-  },
-  modal: {
-    padding: "25px",
-    borderRadius: "15px",
-    width: "350px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "10px",
-  },
-  input: { padding: "10px", borderRadius: "8px", border: "1px solid", fontSize: "14px" },
-  saveBtn: { background: "#4f46e5", color: "#fff", padding: "10px", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" },
-  cancelBtn: { background: "#ef4444", color: "#fff", padding: "10px", border: "none", borderRadius: "8px", cursor: "pointer", fontWeight: "bold" },
-};
