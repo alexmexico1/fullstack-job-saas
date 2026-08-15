@@ -6,21 +6,28 @@ const jobSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index: true,
     },
 
     title: {
       type: String,
       required: true,
+      trim: true,
+      maxlength: 120,
     },
 
     company: {
       type: String,
       required: true,
+      trim: true,
+      maxlength: 120,
     },
 
     location: {
       type: String,
       required: true,
+      trim: true,
+      maxlength: 120,
     },
 
     status: {
@@ -32,11 +39,17 @@ const jobSchema = new mongoose.Schema(
         "Rejected",
       ],
       default: "Applied",
+      index: true,
     },
   },
   {
     timestamps: true,
   }
 );
+
+jobSchema.index({
+  user: 1,
+  createdAt: -1,
+});
 
 module.exports = mongoose.model("Job", jobSchema);
