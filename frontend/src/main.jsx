@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./services/authService.jsx";
 import App from "./App.jsx";
 import "./index.css";
+import "./taskflow-layout.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

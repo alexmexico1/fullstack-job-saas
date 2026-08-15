@@ -5,7 +5,6 @@ import {
   FiPlus,
   FiBarChart2,
   FiUser,
-  FiSettings,
   FiLogOut,
   FiChevronRight,
 } from "react-icons/fi";
@@ -30,7 +29,6 @@ const navigation = [
     label: "Account",
     items: [
       { label: "Profile", path: "/profile", icon: FiUser },
-      { label: "Settings", path: "/settings", icon: FiSettings },
     ],
   },
 ];

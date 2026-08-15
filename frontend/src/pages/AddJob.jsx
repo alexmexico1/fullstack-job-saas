@@ -32,7 +32,7 @@ export default function AddJob() {
 
       toast.success("Job added successfully");
 
-      navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       console.error(error);
       toast.error("Failed to add job");
