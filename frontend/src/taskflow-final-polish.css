@@ -1,0 +1,645 @@
+/* =========================================================
+   TASKFLOW FINAL POLISH
+   Final layer: crisp typography, visible hero/profile imagery,
+   and responsive behavior for laptop, tablet and phone.
+   Loaded last so it wins over earlier legacy CSS.
+   ========================================================= */
+
+:root {
+  --tf-font: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+html,
+body,
+#root,
+button,
+input,
+textarea,
+select,
+table,
+th,
+td {
+  font-family: var(--tf-font) !important;
+  font-synthesis: none !important;
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-width: 320px;
+  overflow-x: hidden;
+}
+
+img {
+  image-rendering: auto;
+}
+
+/* ---------- Dashboard base ---------- */
+.tf-reference-dashboard {
+  width: 100%;
+  min-height: 100vh;
+  overflow-x: clip;
+}
+
+.tf-reference-main {
+  width: auto !important;
+  min-width: 0 !important;
+  max-width: none !important;
+}
+
+.tf-reference-dashboard-content {
+  width: 100% !important;
+  max-width: 1450px !important;
+  margin-inline: auto !important;
+}
+
+.tf-reference-topbar {
+  width: 100% !important;
+  max-width: 1450px !important;
+  margin-inline: auto !important;
+}
+
+/* ---------- Hero artwork: show the complete supplied illustration ---------- */
+.tf-reference-hero {
+  isolation: isolate;
+}
+
+.tf-reference-hero-copy {
+  z-index: 3 !important;
+}
+
+.tf-reference-hero-art {
+  left: auto !important;
+  right: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 62% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  overflow: visible !important;
+  z-index: 1 !important;
+  pointer-events: none !important;
+  opacity: 1 !important;
+}
+
+.tf-reference-hero-art img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: contain !important;
+  object-position: right center !important;
+}
+
+/* ---------- Real profile photo ---------- */
+.tf-reference-top-avatar,
+.tf-reference-avatar,
+.tf-topbar-avatar,
+.tf-user-avatar {
+  overflow: hidden !important;
+  position: relative !important;
+  flex-shrink: 0 !important;
+  background: linear-gradient(135deg, #ffbd32, #f28a22) !important;
+}
+
+.tf-reference-top-avatar img,
+.tf-reference-avatar img,
+.tf-topbar-avatar img,
+.tf-user-avatar img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  border-radius: inherit !important;
+}
+
+.tf-reference-top-avatar {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 50% !important;
+}
+
+.tf-reference-avatar {
+  width: 46px !important;
+  height: 46px !important;
+  border-radius: 50% !important;
+}
+
+/* ---------- Clearer type hierarchy ---------- */
+.tf-reference-hero h1 {
+  font-family: var(--tf-font) !important;
+  font-size: clamp(30px, 3vw, 40px) !important;
+  font-weight: 800 !important;
+  line-height: 1.04 !important;
+  letter-spacing: -0.04em !important;
+}
+
+.tf-reference-eyebrow {
+  font-family: var(--tf-font) !important;
+  font-size: 12px !important;
+  font-weight: 750 !important;
+  letter-spacing: .04em !important;
+}
+
+.tf-reference-hero p,
+.tf-fire-card p,
+.tf-reference-card-heading p,
+.tf-reference-job-copy span,
+.tf-reference-upcoming-row span,
+.tf-feature-copy p,
+.tf-feature-copy span,
+.tf-reference-kpi-copy small,
+.tf-reference-kpi-copy small em {
+  font-family: var(--tf-font) !important;
+}
+
+.tf-reference-card-heading h2,
+.tf-reference-kpi-copy > span,
+.tf-reference-job-copy strong,
+.tf-reference-upcoming-row strong,
+.tf-feature-copy strong,
+.tf-fire-card strong {
+  font-family: var(--tf-font) !important;
+  font-weight: 700 !important;
+}
+
+/* ---------- Laptop ---------- */
+@media (min-width: 1251px) {
+  .tf-reference-main {
+    margin-left: 280px !important;
+    padding-inline: 28px !important;
+  }
+
+  .tf-reference-hero-row {
+    grid-template-columns: minmax(0, 1fr) 375px !important;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1250px) {
+  .tf-reference-sidebar {
+    width: 248px !important;
+  }
+
+  .tf-reference-main {
+    margin-left: 248px !important;
+    padding-inline: 18px !important;
+  }
+
+  .tf-reference-hero-row {
+    grid-template-columns: minmax(0, 1fr) 300px !important;
+  }
+
+  .tf-reference-main-grid {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(250px, .85fr) !important;
+  }
+}
+
+/* ---------- Tablet: drawer navigation + two-column content ---------- */
+@media (min-width: 761px) and (max-width: 1024px) {
+  .tf-reference-sidebar {
+    width: min(320px, 82vw) !important;
+    transform: translateX(-105%) !important;
+    transition: transform .22s ease !important;
+    box-shadow: 18px 0 50px rgba(31, 14, 94, .28) !important;
+  }
+
+  .tf-reference-sidebar.is-open {
+    transform: translateX(0) !important;
+  }
+
+  .tf-reference-main {
+    margin-left: 0 !important;
+    padding: 0 20px 28px !important;
+  }
+
+  .tf-reference-menu {
+    display: grid !important;
+    place-items: center !important;
+    width: 44px !important;
+    height: 44px !important;
+    flex: 0 0 44px !important;
+    border: 1px solid #e2e5f0 !important;
+    border-radius: 12px !important;
+    background: #fff !important;
+    color: #232a4e !important;
+  }
+
+  .tf-reference-search {
+    flex: 1 1 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+  }
+
+  .tf-weather {
+    display: none !important;
+  }
+
+  .tf-reference-account {
+    width: 48px !important;
+    min-width: 48px !important;
+    padding: 3px !important;
+    justify-content: center !important;
+  }
+
+  .tf-reference-account > div:nth-child(2),
+  .tf-reference-account > svg {
+    display: none !important;
+  }
+
+  .tf-reference-hero-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tf-reference-hero {
+    min-height: 190px !important;
+    height: auto !important;
+  }
+
+  .tf-reference-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .tf-reference-main-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr) !important;
+  }
+
+  .tf-reference-side-column {
+    grid-column: 1 / -1 !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 16px !important;
+  }
+
+  .tf-reference-bottom-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .tf-reference-hero-art {
+    width: 58% !important;
+  }
+}
+
+/* ---------- Phone ---------- */
+@media (max-width: 760px) {
+  .tf-reference-sidebar {
+    width: min(320px, 88vw) !important;
+    transform: translateX(-105%) !important;
+    transition: transform .22s ease !important;
+    box-shadow: 18px 0 50px rgba(31, 14, 94, .28) !important;
+  }
+
+  .tf-reference-sidebar.is-open {
+    transform: translateX(0) !important;
+  }
+
+  .tf-reference-nav-backdrop {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 950 !important;
+    border: 0 !important;
+    padding: 0 !important;
+    background: rgba(9, 7, 34, .46) !important;
+    backdrop-filter: blur(3px) !important;
+  }
+
+  .tf-reference-main {
+    margin-left: 0 !important;
+    padding: 0 12px 22px !important;
+  }
+
+  .tf-reference-topbar {
+    min-height: 70px !important;
+    height: auto !important;
+    padding: 10px 0 12px !important;
+    gap: 9px !important;
+    flex-wrap: wrap !important;
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 900 !important;
+    background: rgba(248, 249, 255, .96) !important;
+    backdrop-filter: blur(14px) !important;
+  }
+
+  .tf-reference-menu {
+    display: grid !important;
+    place-items: center !important;
+    width: 42px !important;
+    height: 42px !important;
+    flex: 0 0 42px !important;
+    border: 1px solid #e2e5f0 !important;
+    border-radius: 11px !important;
+    background: #fff !important;
+    color: #232a4e !important;
+  }
+
+  .tf-reference-search {
+    order: 3 !important;
+    flex: 0 0 100% !important;
+    width: 100% !important;
+    height: 42px !important;
+    min-width: 0 !important;
+  }
+
+  .tf-reference-top-actions {
+    margin-left: auto !important;
+    gap: 7px !important;
+  }
+
+  .tf-weather {
+    display: none !important;
+  }
+
+  .tf-reference-icon {
+    width: 42px !important;
+    height: 42px !important;
+  }
+
+  .tf-reference-account {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+    padding: 3px !important;
+    justify-content: center !important;
+  }
+
+  .tf-reference-account > div:nth-child(2),
+  .tf-reference-account > svg {
+    display: none !important;
+  }
+
+  .tf-reference-hero-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .tf-reference-hero {
+    min-height: 205px !important;
+    height: 205px !important;
+  }
+
+  .tf-reference-hero-copy {
+    max-width: 68% !important;
+    padding: 18px !important;
+  }
+
+  .tf-reference-hero h1 {
+    font-size: clamp(25px, 7vw, 31px) !important;
+  }
+
+  .tf-reference-hero p {
+    font-size: 11px !important;
+    line-height: 1.5 !important;
+  }
+
+  .tf-reference-hero-art {
+    width: 78% !important;
+    right: -4% !important;
+    opacity: .9 !important;
+  }
+
+  .tf-reference-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .tf-reference-main-grid,
+  .tf-reference-side-column,
+  .tf-reference-bottom-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tf-reference-side-column {
+    grid-column: auto !important;
+  }
+
+  .tf-reference-application-row {
+    grid-template-columns: 36px minmax(0, 1fr) !important;
+    gap: 9px !important;
+  }
+
+  .tf-reference-application-row time {
+    display: none !important;
+  }
+
+  .tf-reference-application-row .tf-reference-status {
+    grid-column: 2 !important;
+    justify-self: start !important;
+  }
+
+  .tf-reference-upcoming-row {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+  }
+
+  .tf-reference-upcoming-row time {
+    display: none !important;
+  }
+
+  .tf-reference-top-avatar {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+/* ---------- Small phones ---------- */
+@media (max-width: 520px) {
+  .tf-reference-main {
+    padding-inline: 10px !important;
+  }
+
+  .tf-reference-kpis {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tf-reference-kpi {
+    min-height: 94px !important;
+  }
+
+  .tf-reference-hero {
+    min-height: 215px !important;
+    height: 215px !important;
+  }
+
+  .tf-reference-hero-copy {
+    max-width: 74% !important;
+    padding: 17px !important;
+  }
+
+  .tf-reference-hero h1 {
+    font-size: 24px !important;
+  }
+
+  .tf-reference-hero-art {
+    width: 88% !important;
+    right: -17% !important;
+    opacity: .72 !important;
+  }
+
+  .tf-reference-card-heading {
+    gap: 8px !important;
+  }
+
+  .tf-reference-card-heading h2 {
+    font-size: 14px !important;
+  }
+
+  .tf-reference-card-heading > a,
+  .tf-reference-card-heading > button {
+    font-size: 10px !important;
+  }
+
+  .tf-reference-application-row {
+    margin-inline: 12px !important;
+  }
+
+  .tf-reference-upcoming-row {
+    margin-inline: 12px !important;
+  }
+
+  .tf-pipeline-content {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .tf-reference-donut {
+    margin-inline: auto !important;
+  }
+
+  .tf-pipeline-legend {
+    width: 100% !important;
+  }
+}
+
+/* ---------- Generic application/profile/analytics pages ---------- */
+.tf-main {
+  min-width: 0 !important;
+  overflow-x: hidden !important;
+}
+
+.tf-page-header,
+.tf-application-summary,
+.tf-applications-card,
+.tf-profile-card,
+.tf-analytics-grid,
+.tf-dashboard-grid,
+.tf-dashboard-header,
+.tf-form-card,
+.tf-edit-job-card {
+  width: 100% !important;
+  max-width: 1440px !important;
+  margin-inline: auto !important;
+}
+
+.tf-modern-table {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .tf-main {
+    margin-left: 0 !important;
+    padding-inline: 18px !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .tf-main {
+    padding-inline: 12px !important;
+  }
+
+  .tf-topbar {
+    min-height: 64px !important;
+    height: auto !important;
+    gap: 10px !important;
+    padding: 10px 0 !important;
+    flex-wrap: wrap !important;
+  }
+
+  .tf-topbar-left {
+    min-width: 0 !important;
+    flex: 1 1 auto !important;
+  }
+
+  .tf-topbar-right {
+    gap: 7px !important;
+  }
+
+  .tf-topbar-avatar {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+  }
+
+  .tf-page-header {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 16px !important;
+  }
+
+  .tf-page-header > .tf-primary-button {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .tf-application-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .tf-applications-toolbar {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+
+  .tf-toolbar-controls {
+    width: 100% !important;
+    flex-direction: column !important;
+  }
+
+  .tf-search-box,
+  .tf-select-box {
+    width: 100% !important;
+  }
+
+  .tf-table-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .tf-application-summary {
+    grid-template-columns: 1fr !important;
+  }
+
+  .tf-page-title-row {
+    align-items: flex-start !important;
+  }
+
+  .tf-page-title-row h1 {
+    font-size: 28px !important;
+  }
+
+  .tf-modern-table {
+    min-width: 680px;
+  }
+}
+
+/* Dark mode for newly forced controls. */
+html[data-theme='dark'] .tf-reference-menu,
+html[data-theme='dark'] .tf-reference-search {
+  background: #11182b !important;
+  border-color: #26324b !important;
+  color: #edf2ff !important;
+}
+
+html[data-theme='dark'] .tf-reference-search input {
+  color: #edf2ff !important;
+}

@@ -1,0 +1,465 @@
+/* =========================================================
+   TASKFLOW REFERENCE POLISH
+   Small visual refinements only: clearer typography,
+   tighter alignment, real profile photo, and robust
+   laptop/tablet/mobile behavior.
+   ========================================================= */
+
+.tf-reference-dashboard,
+.tf-reference-dashboard *,
+.tf-reference-dashboard button,
+.tf-reference-dashboard input,
+.tf-reference-dashboard select,
+.tf-reference-dashboard textarea {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.tf-reference-dashboard {
+  overflow-x: hidden;
+}
+
+.tf-reference-main {
+  width: auto;
+  min-width: 0;
+}
+
+.tf-reference-dashboard-content {
+  width: 100%;
+}
+
+/* Clearer hierarchy without changing the reference design. */
+.tf-reference-brand strong,
+.tf-reference-hero h1,
+.tf-reference-card-heading h2,
+.tf-reference-kpi-copy > strong,
+.tf-reference-job-copy strong,
+.tf-reference-upcoming-row strong,
+.tf-feature-copy strong,
+.tf-fire-card strong {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif !important;
+}
+
+.tf-reference-brand strong {
+  font-weight: 800 !important;
+}
+
+.tf-reference-hero h1 {
+  font-weight: 750 !important;
+  letter-spacing: -0.045em !important;
+}
+
+.tf-reference-eyebrow,
+.tf-reference-nav-title,
+.tf-reference-nav-link,
+.tf-reference-kpi-copy > span,
+.tf-reference-card-heading h2,
+.tf-reference-job-copy strong,
+.tf-reference-status,
+.tf-reference-account strong {
+  font-weight: 650;
+}
+
+/* Real profile image: keep the supplied photo visible and crisp. */
+.tf-reference-top-avatar,
+.tf-reference-avatar {
+  overflow: hidden !important;
+  position: relative;
+  background: #f4a51c !important;
+}
+
+.tf-reference-top-avatar img,
+.tf-reference-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+  object-fit: cover !important;
+  object-position: center 24% !important;
+  border-radius: inherit !important;
+}
+
+/* The profile card should never collapse the photo on smaller screens. */
+.tf-reference-profile .tf-reference-avatar,
+.tf-reference-account .tf-reference-top-avatar {
+  flex-shrink: 0 !important;
+}
+
+/* Mobile/tablet navigation backdrop. */
+.tf-reference-nav-backdrop {
+  display: none;
+}
+
+/* Keep the dashboard aligned on large laptop screens. */
+@media (min-width: 1251px) {
+  .tf-reference-main {
+    margin-left: 280px !important;
+    padding-inline: 28px !important;
+  }
+
+  .tf-reference-topbar,
+  .tf-reference-dashboard-content {
+    max-width: 1450px;
+  }
+}
+
+/* Smaller laptops: preserve the same composition without squeezing cards. */
+@media (max-width: 1250px) and (min-width: 1025px) {
+  .tf-reference-sidebar {
+    width: 248px !important;
+  }
+
+  .tf-reference-main {
+    margin-left: 248px !important;
+    padding-inline: 18px !important;
+  }
+
+  .tf-reference-topbar {
+    gap: 14px;
+  }
+
+  .tf-reference-search {
+    width: min(440px, 42vw);
+  }
+
+  .tf-reference-hero-row {
+    grid-template-columns: minmax(0, 1fr) 300px;
+  }
+
+  .tf-reference-main-grid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(260px, .82fr);
+  }
+
+  .tf-reference-kpi {
+    padding-inline: 13px;
+  }
+
+  .tf-reference-kpi-copy > span {
+    font-size: 10px;
+  }
+
+  .tf-sparkline {
+    width: 64px;
+  }
+}
+
+/* Tablet: convert the sidebar into a proper drawer and stack the content. */
+@media (max-width: 1024px) {
+  .tf-reference-sidebar {
+    width: min(310px, 84vw) !important;
+    transform: translateX(-105%);
+    transition: transform .22s ease;
+    box-shadow: 18px 0 50px rgba(31, 14, 94, .28);
+  }
+
+  .tf-reference-sidebar.is-open {
+    transform: translateX(0);
+  }
+
+  .tf-reference-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 950;
+    border: 0;
+    padding: 0;
+    background: rgba(9, 7, 34, .42);
+    backdrop-filter: blur(2px);
+  }
+
+  .tf-reference-main {
+    margin-left: 0 !important;
+    padding: 0 18px 24px !important;
+  }
+
+  .tf-reference-topbar {
+    min-height: 72px;
+    height: auto;
+    gap: 12px;
+    padding: 12px 0;
+  }
+
+  .tf-reference-menu {
+    display: grid !important;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border: 1px solid #e2e5f0;
+    border-radius: 11px;
+    background: #fff;
+    color: #232a4e;
+  }
+
+  .tf-reference-search {
+    flex: 1 1 auto;
+    width: auto;
+    min-width: 0;
+  }
+
+  .tf-reference-top-actions {
+    flex: 0 0 auto;
+  }
+
+  .tf-weather {
+    display: none;
+  }
+
+  .tf-reference-account {
+    min-width: 46px;
+    width: 46px;
+    padding: 4px;
+    justify-content: center;
+  }
+
+  .tf-reference-account > div:nth-child(2),
+  .tf-reference-account > svg {
+    display: none;
+  }
+
+  .tf-reference-hero-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-reference-hero {
+    min-height: 176px;
+    height: auto;
+  }
+
+  .tf-reference-fire-card,
+  .tf-fire-card {
+    min-height: 118px;
+  }
+
+  .tf-reference-kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tf-reference-main-grid {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  }
+
+  .tf-reference-side-column {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .tf-reference-bottom-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Phone/tablet portrait: simplify the top bar and card composition. */
+@media (max-width: 760px) {
+  .tf-reference-main {
+    padding-inline: 13px !important;
+  }
+
+  .tf-reference-topbar {
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+    background: rgba(248, 249, 255, .96);
+    backdrop-filter: blur(14px);
+  }
+
+  .tf-reference-search {
+    order: 2;
+    flex-basis: 100%;
+    height: 42px;
+  }
+
+  .tf-reference-top-actions {
+    margin-left: auto;
+  }
+
+  .tf-reference-icon {
+    width: 42px;
+    height: 42px;
+  }
+
+  .tf-reference-hero-copy {
+    padding: 20px;
+    max-width: 68%;
+  }
+
+  .tf-reference-eyebrow {
+    font-size: 10px;
+  }
+
+  .tf-reference-hero h1 {
+    font-size: clamp(25px, 7vw, 32px);
+    line-height: 1.05;
+  }
+
+  .tf-reference-hero p {
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .tf-reference-hero-art {
+    left: 34%;
+    opacity: .94;
+  }
+
+  .tf-reference-hero-art img {
+    object-position: center right;
+  }
+
+  .tf-reference-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-reference-side-column {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .tf-reference-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tf-reference-application-row {
+    grid-template-columns: 38px minmax(0, 1fr) auto;
+  }
+
+  .tf-reference-application-row time {
+    display: none;
+  }
+
+  .tf-reference-job-copy strong {
+    font-size: 11px;
+  }
+
+  .tf-reference-job-copy span {
+    font-size: 9px;
+  }
+}
+
+/* Small phones: avoid cramped two-column cards and keep every control tappable. */
+@media (max-width: 520px) {
+  .tf-reference-top-actions {
+    gap: 6px;
+  }
+
+  .tf-reference-icon,
+  .tf-reference-account,
+  .tf-reference-menu {
+    width: 38px;
+    height: 38px;
+  }
+
+  .tf-reference-menu {
+    flex-basis: 38px;
+  }
+
+  .tf-reference-search {
+    height: 40px;
+    padding-inline: 10px;
+  }
+
+  .tf-reference-search span {
+    display: none;
+  }
+
+  .tf-reference-kpis {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .tf-reference-kpi {
+    min-height: 96px;
+    padding: 13px 14px;
+  }
+
+  .tf-reference-kpi-copy > strong {
+    font-size: 23px;
+  }
+
+  .tf-sparkline {
+    width: 62px;
+  }
+
+  .tf-reference-hero {
+    min-height: 196px;
+  }
+
+  .tf-reference-hero-copy {
+    max-width: 73%;
+    padding: 18px;
+  }
+
+  .tf-reference-hero h1 {
+    font-size: 24px;
+  }
+
+  .tf-reference-hero h1 span {
+    font-size: 19px;
+  }
+
+  .tf-reference-hero-art {
+    left: 24%;
+    opacity: .82;
+  }
+
+  .tf-reference-card-heading {
+    padding-inline: 14px;
+  }
+
+  .tf-reference-card-heading h2 {
+    font-size: 14px;
+  }
+
+  .tf-reference-application-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+    gap: 9px;
+    margin-inline: 14px;
+  }
+
+  .tf-reference-status {
+    grid-column: 2;
+    justify-self: start;
+  }
+
+  .tf-pipeline-content {
+    flex-direction: column;
+    align-items: stretch;
+    padding-inline: 14px;
+  }
+
+  .tf-reference-donut {
+    margin-inline: auto;
+  }
+
+  .tf-pipeline-legend {
+    width: 100%;
+  }
+
+  .tf-reference-upcoming-row {
+    grid-template-columns: 44px minmax(0, 1fr);
+    margin-inline: 14px;
+  }
+
+  .tf-reference-upcoming-row time {
+    display: none;
+  }
+
+  .tf-ai-coach-card,
+  .tf-feature-card {
+    min-height: 124px;
+  }
+}
+
+/* Dark-mode counterparts for the responsive controls. */
+html[data-theme='dark'] .tf-reference-nav-backdrop {
+  background: rgba(0, 0, 0, .56);
+}
+
+html[data-theme='dark'] .tf-reference-menu {
+  background: #11182b;
+  border-color: #26324b;
+  color: #edf2ff;
+}

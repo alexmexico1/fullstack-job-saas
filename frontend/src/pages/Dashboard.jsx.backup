@@ -1,0 +1,483 @@
+import { Link } from "react-router-dom";
+import {
+  ArrowUpRight,
+  Bell,
+  BriefcaseBusiness,
+  CalendarDays,
+  CheckCircle2,
+  ChevronDown,
+  ChevronRight,
+  Clock3,
+  FileText,
+  Flame,
+  LineChart,
+  MessageCircle,
+  MoreHorizontal,
+  Plus,
+  Rocket,
+  Search,
+  Sparkles,
+  Target,
+  TrendingUp,
+  Users,
+  Zap,
+} from "lucide-react";
+
+const applications = [
+  {
+    company: "Microsoft",
+    role: "Senior Frontend Developer",
+    location: "Redmond, WA",
+    status: "Interview",
+    color: "blue",
+    time: "2d ago",
+    logo: "M",
+  },
+  {
+    company: "Google",
+    role: "Full Stack Developer",
+    location: "Mountain View, CA",
+    status: "In Progress",
+    color: "green",
+    time: "3d ago",
+    logo: "G",
+  },
+  {
+    company: "Amazon",
+    role: "Backend Developer",
+    location: "Seattle, WA",
+    status: "Applied",
+    color: "orange",
+    time: "5d ago",
+    logo: "A",
+  },
+  {
+    company: "Netflix",
+    role: "Frontend Engineer",
+    location: "Los Gatos, CA",
+    status: "Interview",
+    color: "red",
+    time: "1w ago",
+    logo: "N",
+  },
+  {
+    company: "Stripe",
+    role: "DevOps Engineer",
+    location: "San Francisco, CA",
+    status: "Applied",
+    color: "purple",
+    time: "1w ago",
+    logo: "S",
+  },
+];
+
+const interviews = [
+  {
+    company: "Netflix",
+    role: "Frontend Developer",
+    type: "Technical interview",
+    date: "MAY 24",
+    time: "10:00 AM",
+    logo: "N",
+  },
+  {
+    company: "Microsoft",
+    role: "Full Stack Developer",
+    type: "Culture & team",
+    date: "MAY 26",
+    time: "2:00 PM",
+    logo: "M",
+  },
+];
+
+function StatCard({ icon: Icon, label, value, change, note, accent }) {
+  return (
+    <div className={`premium-stat ${accent}`}>
+      <div className="stat-top">
+        <div className="stat-icon">
+          <Icon size={18} />
+        </div>
+        <MoreHorizontal size={17} className="muted-icon" />
+      </div>
+      <div className="stat-label">{label}</div>
+      <div className="stat-value">{value}</div>
+      <div className="stat-bottom">
+        <span className="stat-change">
+          <TrendingUp size={13} />
+          {change}
+        </span>
+        <span>{note}</span>
+      </div>
+      <div className="mini-chart">
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+    </div>
+  );
+}
+
+function StatusBadge({ status }) {
+  const cls =
+    status === "Interview"
+      ? "status-interview"
+      : status === "In Progress"
+      ? "status-progress"
+      : "status-applied";
+
+  return <span className={`status-badge ${cls}`}>{status}</span>;
+}
+
+export default function Dashboard() {
+  return (
+    <div className="premium-dashboard">
+      <header className="premium-topbar">
+        <div className="mobile-brand">
+          <div className="mini-logo">T</div>
+          <strong>TaskFlow</strong>
+        </div>
+
+        <div className="premium-search">
+          <Search size={17} />
+          <input placeholder="Search your workspace..." />
+          <kbd>⌘K</kbd>
+        </div>
+
+        <div className="topbar-actions">
+          <div className="weather">
+            <span>☀️</span>
+            <strong>28°C</strong>
+            <small>Lagos, NG</small>
+          </div>
+
+          <Link to="/add-job" className="top-add">
+            <Plus size={16} />
+            Add Application
+          </Link>
+
+          <button className="icon-button">
+            <Sparkles size={18} />
+          </button>
+
+          <button className="icon-button notification">
+            <Bell size={18} />
+            <i />
+          </button>
+
+          <div className="top-avatar">
+            <img src="/profile.jpg" alt="Alex" />
+            <div>
+              <strong>alex</strong>
+              <small>Workspace</small>
+            </div>
+            <ChevronDown size={14} />
+          </div>
+        </div>
+      </header>
+
+      <main className="premium-main">
+        <section className="welcome-row">
+          <div>
+            <span className="eyebrow">
+              <Sparkles size={14} /> WORKSPACE OVERVIEW
+            </span>
+            <h1>
+              Good morning, <em>alex</em> 👋
+            </h1>
+            <p>Keep pushing forward. You're making great progress today.</p>
+          </div>
+
+          <div className="goal-pill">
+            <div className="goal-ring">
+              <span>75%</span>
+            </div>
+            <div>
+              <strong>You're on fire! 🔥</strong>
+              <small>2 interviews this week. Prepare well and ace them!</small>
+            </div>
+          </div>
+        </section>
+
+        <section className="hero-banner">
+          <div className="hero-copy">
+            <span>YOUR CAREER COMMAND CENTER</span>
+            <h2>Turn applications into offers.</h2>
+            <p>
+              Track every opportunity, prepare smarter, and stay ahead of your
+              job search.
+            </p>
+            <Link to="/analytics" className="hero-button">
+              View career analytics <ArrowUpRight size={16} />
+            </Link>
+          </div>
+
+          <div className="hero-rocket">
+            <div className="rocket-glow" />
+            <div className="rocket">🚀</div>
+            <div className="star s1">✦</div>
+            <div className="star s2">✦</div>
+            <div className="star s3">✧</div>
+          </div>
+        </section>
+
+        <section className="stats-grid">
+          <StatCard
+            icon={BriefcaseBusiness}
+            label="Total Applications"
+            value="24"
+            change="+12%"
+            note="from last month"
+            accent="stat-purple"
+          />
+          <StatCard
+            icon={Clock3}
+            label="In Progress"
+            value="8"
+            change="+25%"
+            note="from last month"
+            accent="stat-blue"
+          />
+          <StatCard
+            icon={CalendarDays}
+            label="Interviews"
+            value="5"
+            change="+67%"
+            note="from last month"
+            accent="stat-pink"
+          />
+          <StatCard
+            icon={CheckCircle2}
+            label="Offers"
+            value="2"
+            change="+100%"
+            note="from last month"
+            accent="stat-green"
+          />
+        </section>
+
+        <section className="dashboard-grid">
+          <div className="card analytics-card">
+            <div className="card-heading">
+              <div>
+                <h3>Application Overview</h3>
+                <p>Track your progress over time</p>
+              </div>
+              <button className="select-button">
+                Last 6 months <ChevronDown size={14} />
+              </button>
+            </div>
+
+            <div className="chart">
+              <div className="y-labels">
+                <span>30</span>
+                <span>25</span>
+                <span>20</span>
+                <span>15</span>
+                <span>10</span>
+                <span>5</span>
+                <span>0</span>
+              </div>
+
+              <div className="chart-area">
+                <div className="grid-line g1" />
+                <div className="grid-line g2" />
+                <div className="grid-line g3" />
+                <div className="grid-line g4" />
+                <div className="grid-line g5" />
+                <div className="grid-line g6" />
+
+                <svg viewBox="0 0 600 220" preserveAspectRatio="none">
+                  <defs>
+                    <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
+                      <stop offset="0%" stopColor="#a855f7" stopOpacity=".35" />
+                      <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0 185 L105 145 L205 112 L305 145 L405 72 L505 42 L600 10 L600 220 L0 220 Z"
+                    fill="url(#chartFill)"
+                  />
+                  <path
+                    d="M0 185 L105 145 L205 112 L305 145 L405 72 L505 42 L600 10"
+                    fill="none"
+                    stroke="#c026d3"
+                    strokeWidth="4"
+                  />
+                  {[0, 105, 205, 305, 405, 505, 600].map((x, i) => (
+                    <circle
+                      key={i}
+                      cx={x}
+                      cy={[185, 145, 112, 145, 72, 42, 10][i]}
+                      r="5"
+                      fill="#fff"
+                      stroke="#c026d3"
+                      strokeWidth="3"
+                    />
+                  ))}
+                </svg>
+
+                <div className="months">
+                  <span>May</span>
+                  <span>Jun</span>
+                  <span>Jul</span>
+                  <span>Aug</span>
+                  <span>Sep</span>
+                  <span>Oct</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="card pipeline-card">
+            <div className="card-heading">
+              <div>
+                <h3>Application Pipeline</h3>
+                <p>Current search progress</p>
+              </div>
+              <Link to="/applications" className="view-link">
+                View Report
+              </Link>
+            </div>
+
+            <div className="donut-layout">
+              <div className="donut">
+                <div className="donut-hole">
+                  <strong>24</strong>
+                  <span>Total</span>
+                </div>
+              </div>
+
+              <div className="legend">
+                <div><i className="dot purple" />Applied <b>10 (42%)</b></div>
+                <div><i className="dot blue" />In Progress <b>8 (33%)</b></div>
+                <div><i className="dot orange" />Interview <b>5 (21%)</b></div>
+                <div><i className="dot green" />Offers <b>2 (8%)</b></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="dashboard-grid lower">
+          <div className="card applications-card">
+            <div className="card-heading">
+              <div>
+                <h3>Recent Applications</h3>
+                <p>Your latest job opportunities</p>
+              </div>
+              <Link to="/applications" className="view-link">
+                View all <ArrowUpRight size={14} />
+              </Link>
+            </div>
+
+            <div className="application-list">
+              {applications.map((app) => (
+                <div className="application-row" key={`${app.company}-${app.role}`}>
+                  <div className={`company-logo ${app.color}`}>{app.logo}</div>
+                  <div className="application-info">
+                    <strong>{app.role}</strong>
+                    <span>{app.company} · {app.location}</span>
+                  </div>
+                  <StatusBadge status={app.status} />
+                  <time>{app.time}</time>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="card interviews-card">
+            <div className="card-heading">
+              <div>
+                <h3>Upcoming Interviews</h3>
+                <p>Prepare and make your next move</p>
+              </div>
+              <Link to="/applications" className="view-link">
+                View Calendar <ArrowUpRight size={14} />
+              </Link>
+            </div>
+
+            <div className="interview-list">
+              {interviews.map((item) => (
+                <div className="interview-row" key={item.company}>
+                  <div className="company-logo dark">{item.logo}</div>
+                  <div className="interview-info">
+                    <strong>{item.role}</strong>
+                    <span>{item.company} · {item.type}</span>
+                  </div>
+                  <div className="interview-date">
+                    <b>{item.date}</b>
+                    <span>{item.time}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <Link to="/applications" className="calendar-button">
+              <CalendarDays size={16} /> Open interview calendar
+            </Link>
+          </div>
+        </section>
+
+        <section className="insight-grid">
+          <div className="ai-card">
+            <div className="ai-orb">🤖</div>
+            <div>
+              <span>AI CAREER COACH</span>
+              <h3>Your next interview is your opportunity.</h3>
+              <p>Get personalized insights and improve your job search strategy.</p>
+              <button>
+                Ask AI Coach <MessageCircle size={15} />
+              </button>
+            </div>
+          </div>
+
+          <div className="insight-card">
+            <div className="insight-icon purple-bg"><Target size={18} /></div>
+            <span>RESUME SCORE</span>
+            <div className="score-row">
+              <strong>85<span>/100</span></strong>
+              <small>Great score!</small>
+            </div>
+            <p>Your resume is well optimized.</p>
+            <a href="#improve">Improve now →</a>
+          </div>
+
+          <div className="insight-card">
+            <div className="insight-icon blue-bg"><Users size={18} /></div>
+            <span>INTERVIEW PREP</span>
+            <h4>2 upcoming interviews</h4>
+            <p>Prepare for your interviews with AI assistance.</p>
+            <a href="#prepare">Start preparing →</a>
+          </div>
+
+          <div className="insight-card">
+            <div className="insight-icon green-bg"><Zap size={18} /></div>
+            <span>SKILLS MATCH</span>
+            <div className="match-row">
+              <strong>82%</strong>
+              <span>Top Match</span>
+            </div>
+            <p>Your skills match the roles you're targeting.</p>
+            <a href="#matches">View matches →</a>
+          </div>
+
+          <div className="insight-card">
+            <div className="insight-icon orange-bg"><LineChart size={18} /></div>
+            <span>MARKET INSIGHTS</span>
+            <h4>High Demand</h4>
+            <p>Frontend Developers are in high demand.</p>
+            <a href="#market">Explore trends →</a>
+          </div>
+        </section>
+
+        <footer className="premium-footer">
+          <span>TaskFlow Career OS</span>
+          <span>Built for smarter job searching · v2.0</span>
+        </footer>
+      </main>
+    </div>
+  );
+}

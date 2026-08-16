@@ -9,7 +9,6 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 import { useAuth } from "../services/authService.jsx";
-import { getProfilePhoto } from "../utils/profilePhoto.js";
 
 const navigation = [
   {
@@ -34,11 +33,13 @@ const navigation = [
   },
 ];
 
+const FALLBACK_PROFILE_PHOTO = "/profile.jpg";
+
 export default function Sidebar() {
   const { user, logout } = useAuth();
 
-  const displayName = user?.name || "Alex";
-  const email = user?.email || "Account";
+  const displayName = user?.name || "Your account";
+  const email = user?.email || "Not signed in";
 
   return (
     <aside className="tf-sidebar">
@@ -89,11 +90,7 @@ export default function Sidebar() {
       <div className="tf-sidebar-footer">
         <div className="tf-user-card">
           <div className="tf-user-avatar">
-            <img
-              src={getProfilePhoto()}
-              alt="Alex profile"
-              className="tf-profile-avatar-image"
-            />
+            <img src={user?.profilePhoto || FALLBACK_PROFILE_PHOTO} alt="" onError={(event) => { event.currentTarget.src = FALLBACK_PROFILE_PHOTO; }} />
           </div>
 
           <div className="tf-user-details">
