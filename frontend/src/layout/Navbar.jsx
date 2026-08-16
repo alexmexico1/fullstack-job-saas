@@ -7,12 +7,13 @@ import {
 } from "react-icons/fi";
 import { useAuth } from "../services/authService.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
+import { getProfilePhoto } from "../utils/profilePhoto.js";
 
 export default function Navbar() {
   const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
 
-  const name = user?.name || "Alex Obi";
+  const name = user?.name || "Alex";
   const firstName = name.split(" ")[0];
 
   return (
@@ -68,7 +69,11 @@ export default function Navbar() {
 
         <div className="tf-topbar-user">
           <div className="tf-topbar-avatar">
-            {name.charAt(0).toUpperCase()}
+            <img
+              src={getProfilePhoto()}
+              alt="Alex profile"
+              className="tf-profile-avatar-image"
+            />
           </div>
 
           <div className="tf-topbar-user-copy">

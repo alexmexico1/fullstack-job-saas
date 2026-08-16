@@ -9,6 +9,7 @@ import {
   FiChevronRight,
 } from "react-icons/fi";
 import { useAuth } from "../services/authService.jsx";
+import { getProfilePhoto } from "../utils/profilePhoto.js";
 
 const navigation = [
   {
@@ -36,7 +37,7 @@ const navigation = [
 export default function Sidebar() {
   const { user, logout } = useAuth();
 
-  const displayName = user?.name || "Alex Obi";
+  const displayName = user?.name || "Alex";
   const email = user?.email || "Account";
 
   return (
@@ -88,7 +89,11 @@ export default function Sidebar() {
       <div className="tf-sidebar-footer">
         <div className="tf-user-card">
           <div className="tf-user-avatar">
-            {displayName.charAt(0).toUpperCase()}
+            <img
+              src={getProfilePhoto()}
+              alt="Alex profile"
+              className="tf-profile-avatar-image"
+            />
           </div>
 
           <div className="tf-user-details">

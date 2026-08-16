@@ -1,4 +1,5 @@
 import { useAuth } from "../services/authService.jsx";
+import { getProfilePhoto } from "../utils/profilePhoto.js";
 
 export default function Profile() {
   const { logout } = useAuth();
@@ -7,12 +8,12 @@ export default function Profile() {
     <div style={styles.container}>
       <div style={styles.card}>
         <img
-          src="https://i.pravatar.cc/150"
-          alt=""
+          src={getProfilePhoto()}
+          alt="Alex profile photo"
           style={styles.avatar}
         />
 
-        <h2>Alex Obi</h2>
+        <h2>Alex</h2>
 
         <p>Software Engineer</p>
 

@@ -593,3 +593,31 @@ body {
     font-size: 26px !important;
   }
 }
+
+/* ======================================================
+   ALEX PROFILE PHOTO
+   ====================================================== */
+
+.tf-user-avatar,
+.tf-topbar-avatar {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tf-profile-avatar-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.tf-user-avatar .tf-profile-avatar-image {
+  border-radius: inherit;
+}
+
+.tf-topbar-avatar .tf-profile-avatar-image {
+  border-radius: inherit;
+}
