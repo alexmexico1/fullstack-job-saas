@@ -1,18 +1,14 @@
 import {
   FiBell,
   FiSearch,
-  FiSun,
-  FiMoon,
   FiCommand,
 } from "react-icons/fi";
 import { useAuth } from "../services/authService.jsx";
-import { useTheme } from "../context/ThemeContext.jsx";
 import { getProfilePhoto } from "../utils/profilePhoto.js";
 import TaskFlowThemeToggle from "../TaskFlowThemeToggle.jsx";
 
 export default function Navbar() {
   const { user } = useAuth();
-  const { isDark, toggleTheme } = useTheme();
 
   const name = user?.name || "Alex";
   const firstName = name.split(" ")[0];
@@ -48,15 +44,6 @@ export default function Navbar() {
       </div>
 
       <div className="tf-topbar-right">
-        <button
-          className="tf-icon-button tf-theme-toggle"
-          onClick={toggleTheme}
-          title={isDark ? "Switch to light mode" : "Switch to dark mode"}
-          aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
-        >
-          {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
-        </button>
-
         <div className="tf-header-actions">
   <div className="tf-theme-action">
     <TaskFlowThemeToggle />
