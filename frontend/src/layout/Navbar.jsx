@@ -8,6 +8,7 @@ import {
 import { useAuth } from "../services/authService.jsx";
 import { useTheme } from "../context/ThemeContext.jsx";
 import { getProfilePhoto } from "../utils/profilePhoto.js";
+import TaskFlowThemeToggle from "../TaskFlowThemeToggle.jsx";
 
 export default function Navbar() {
   const { user } = useAuth();
@@ -56,7 +57,11 @@ export default function Navbar() {
           {isDark ? <FiSun size={18} /> : <FiMoon size={18} />}
         </button>
 
-        <button
+        <div className="tf-header-actions">
+  <div className="tf-theme-action">
+    <TaskFlowThemeToggle />
+  </div>
+  <button
           className="tf-icon-button tf-notification-button"
           title="Notifications"
           aria-label="Notifications"
@@ -64,6 +69,7 @@ export default function Navbar() {
           <FiBell size={18} />
           <span className="tf-notification-dot" />
         </button>
+</div>
 
         <div className="tf-topbar-divider" />
 

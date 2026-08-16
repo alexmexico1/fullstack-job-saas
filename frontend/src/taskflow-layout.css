@@ -621,3 +621,65 @@ body {
 .tf-topbar-avatar .tf-profile-avatar-image {
   border-radius: inherit;
 }
+
+
+/* TASKFLOW HEADER ACTION FIX
+   Theme toggle belongs beside notifications.
+*/
+.tf-header,
+.tf-topbar,
+.tf-navbar {
+  position: relative;
+}
+
+.tf-header-actions {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  position: relative !important;
+  height: 40px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.tf-header-actions .tf-theme-action {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.tf-header-actions .tf-theme-action button,
+.tf-header-actions > button {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+.tf-header-actions .tf-theme-action button {
+  width: 40px !important;
+  height: 40px !important;
+  min-width: 40px !important;
+  min-height: 40px !important;
+  border-radius: 10px !important;
+}
+
+@media (max-width: 900px) {
+  .tf-header-actions {
+    gap: 6px !important;
+  }
+}
+ 
+/* END TASKFLOW HEADER ACTION FIX */
