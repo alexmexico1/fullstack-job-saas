@@ -165,6 +165,13 @@ export default function Dashboard() {
   }, [jobs]);
 
   const firstName = user?.name?.split(" ")[0] || "there";
+  const hour = new Date().getHours();
+  const greeting =
+    hour >= 5 && hour < 12
+      ? "Good morning"
+      : hour >= 12 && hour < 17
+        ? "Good afternoon"
+        : "Good evening";
 
   return (
     <div className="tf-app-shell tf-dashboard-shell tf-reference-dashboard">
@@ -186,7 +193,7 @@ export default function Dashboard() {
             <div className="tf-reference-hero">
               <div className="tf-reference-hero-copy">
                 <span className="tf-reference-eyebrow">WORKSPACE OVERVIEW</span>
-                <h1>Good morning, <strong>{firstName}</strong> <span>👋</span></h1>
+                <h1>{greeting}, <strong>{firstName}</strong> <span>👋</span></h1>
                 <p>Keep pushing forward. You're making great progress today.</p>
               </div>
               <div className="tf-reference-hero-art" aria-hidden="true">
